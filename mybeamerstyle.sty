@@ -1,0 +1,73 @@
+\setbeameroption{show notes on second screen=right}
+\setbeamercovered{dynamic} % transparent % highly dynamic
+
+\usetheme{Madrid}
+\colorlet{beamer@blendedblue}{orange!75!black}
+% \useoutertheme[subsection=false]{miniframes}
+
+% \setbeamertemplate{navigation symbols}{}
+% \setbeamertemplate{note page}{\pagecolor{yellow!5}\insertnote}\usepackage{palatino}
+% \setbeamertemplate{footline}[frame number]{}
+
+% \usepackage[para]{footmisc}
+\setbeamerfont{footnote}{size=\tiny}
+\AtBeginEnvironment{frame}{\setcounter{footnote}{0}}
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+\setcounter{tocdepth}{3}
+\AtBeginSection[]{
+    {\setbeamercolor{background canvas}{bg=gray}
+    \begin{frame}[noframenumbering]{Overview}
+        \tableofcontents[sectionstyle=shaded/shaded,subsectionstyle=shaded/shaded/shaded,subsubsectionstyle=shaded/shaded/shaded/shaded]
+    \end{frame}
+    \begin{frame}[noframenumbering]{Overview}
+        \tableofcontents[sectionstyle=show/shaded,subsectionstyle=show/show/shaded,subsubsectionstyle=show/show/show/shaded]
+    \end{frame}}
+}
+\makeatletter
+    \newcommand{\trickbeamer}{\advance\beamer@slideinframe by-1}
+\makeatother
+
+\usepackage{appendixnumberbeamer}
+\usepackage{hyperref}
+\usepackage{graphicx} % Allows including images
+% \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{CJKutf8} % For Kaomoji
+\usepackage{amsmath}
+
+\usepackage[style=authoryear,natbib=true,backend=biber]{biblatex}
+% \setbeamertemplate{bibliography item}{}
+\renewcommand*{\bibfont}{\scriptsize{}}
+\setlength{\bibhang}{11pt}
+% \setlength{\labelnumberwidth}{14pt}
+% \makeatletter
+%   \mode<presentation>{
+%       \newlength{\beamer@bibiconwidth}
+%       \settowidth\beamer@bibiconwidth{\usebeamertemplate*{bibliography item}}
+%       \setlength{\labelwidth}{-\beamer@bibiconwidth}
+%       \addtolength{\labelwidth}{2\labelsep}
+%       \addtolength{\bibhang}{\labelsep}
+%   }
+% \makeatother
+\addbibresource{ref.bib} % \bibliography{ref.bib}
+
+\newcommand{\citec}[1]{\hfill\textcolor{lightgray}{\citep{#1}}}
+\newcommand{\citef}[1]{\only<.->{\footcite{#1}}}
+\newcommand{\cname}[2]{\texorpdfstring{#1 \citec{#2}}{#1}}
+
+\usepackage{xcolor}
+\definecolor{midgray}{RGB}{233,233,233}
+\definecolor{peach}{RGB}{252,242,239}
+\definecolor{gray}{RGB}{244,244,244}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{arrows.meta,arrows}
+
+\usepackage{animate}
+% \beamerdefaultoverlayspecification{<+->}

@@ -1,0 +1,201 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+\documentclass[aspectratio=169,xcolor=dvipsnames]{beamer}
+\usetheme{Madrid}
+
+\usepackage{hyperref}
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+
+% \beamerdefaultoverlayspecification{<+->}
+\setbeamerfont{footnote}{size=\tiny}
+
+\usepackage[style=authoryear,backend=biber]{biblatex}
+% \setbeamertemplate{bibliography item}{}
+\renewcommand*{\bibfont}{\scriptsize{}}
+\setlength{\bibhang}{0pt}
+% \makeatletter
+%   \mode<presentation>{
+%       \newlength{\beamer@bibiconwidth}
+%       \settowidth\beamer@bibiconwidth{\usebeamertemplate*{bibliography item}}
+%       \setlength{\labelwidth}{-\beamer@bibiconwidth}
+%       \addtolength{\labelwidth}{2\labelsep}
+%       \addtolength{\bibhang}{\labelsep}
+%   }
+% \makeatother
+\addbibresource{ref.bib} % \bibliography{ref.bib}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+\title[]{Can Self-Exploring RL Agents Have Compulsive Behavior?}
+\subtitle{\footnotesize Essay Rotation}
+
+\author[]{\Large Pulkit Goyal}
+\institute[]
+{
+    M.Sc. Student, Neural Information Processing \\
+    University of Tübingen
+    \vskip 12pt
+
+    \textit{Supervised by} \\\vspace{2pt}
+    {\footnotesize Cansu Sancaktar}\\
+    Autonomous Learning Group, MPI-IS
+}
+\date{\today}
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+\begin{document}
+
+%************************************************
+\begin{frame}
+    % Print the title page as the first slide
+    \titlepage
+\end{frame}
+%************************************************
+
+%************************************************
+\begin{frame}{Overview}
+    % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+    \setcounter{tocdepth}{2}
+    \tableofcontents % [pausesections]
+\end{frame}
+%************************************************
+
+%************************************************
+\section{Obsessive-Compulsive Disorder}
+%------------------------------------------------
+\subsection{What is OCD?}
+
+%------------------------------------------------
+\subsection{Low-Level Characteristics of OCD}
+
+%************************************************
+
+%************************************************
+\section{A Computational Model of OCD} %  | Excessive Uncertainty Regarding State Transitions
+%------------------------------------------------
+
+
+%************************************************
+
+%************************************************
+\section{Bayesian-Brain Framework}
+%------------------------------------------------
+\subsection{Free-Energy Principle}
+\subsubsection{Predictive Coding and Active Inference}
+
+%------------------------------------------------
+\subsection{Ties to Self-Supervised Reinforcement Learning}
+
+%------------------------------------------------
+\subsubsection{VIME}
+
+%************************************************
+
+%************************************************
+\section{Computational Models of Related Mental Disorders}
+%------------------------------------------------
+\subsection{Schizophrenia}
+
+%------------------------------------------------
+\subsection{Autism Spectrum Disorder (ASD)}
+
+%************************************************
+
+%************************************************
+\section{Modeling Obsessive-Compulsive Behavior in Self-Exploring RL Agents} % Inspiration from mentioned studies
+%------------------------------------------------
+% \subsection{Proposals}
+
+\begin{frame}{Frame Title}
+    
+\end{frame}
+
+\note[itemize]{
+\item point 1
+\item point 2
+}
+
+%************************************************
+
+
+
+%------------------------------------------------
+
+% \begin{frame}{Frame Title}
+%     \begin{enumerate}[<+->]
+%         \item ()
+%         \item ()
+%     \end{enumerate}
+% \end{frame}
+
+%------------------------------------------------
+
+% \begin{columns}[c] % [c] or [t]
+%     \column{.45\textwidth} % Left column and width
+%     \column{.5\textwidth} % Right column and width
+% \end{columns}
+
+%------------------------------------------------
+
+% \begin{table}
+%     \begin{tabular}{l l l}
+%         \toprule
+%         \textbf{} & \textbf{} & \textbf{} \\
+%         \midrule
+%         ()         & ()           & ()               \\
+%         \bottomrule
+%     \end{tabular}
+%     \caption{}
+% \end{table}
+
+%------------------------------------------------
+
+% \begin{frame}{Theorem}
+%     \begin{theorem}[]
+%         $$
+%     \end{theorem}
+% \end{frame}
+
+%------------------------------------------------
+
+% \begin{figure}
+%     \includegraphics[width=0.8\linewidth]{}
+% \end{figure}
+
+%------------------------------------------------
+
+% \begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
+%     \frametitle{Citation}
+%     An example of the \verb|\cite| command to cite within the presentation:\\~
+%     This statement requires citation \footcite{pl, yl}.
+% \end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{References} % [allowframebreaks]
+    % Beamer does not support BibTeX so references must be inserted manually as below
+    % \footnotesize{
+    %     \begin{thebibliography}{99}
+    %         \bibitem[Smith, 2012]{p1} John Smith (2012)
+    %         \newblock Title of the publication
+    %         \newblock \emph{Journal Name} 12(3), 45 -- 678.
+    %     \end{thebibliography}
+    % }
+    % \bibliographystyle{apalike}
+    \printbibliography
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+    \Huge{\centerline{Thank You!}}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}

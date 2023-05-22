@@ -1,0 +1,43 @@
+\begin{frame}{Animations}
+
+    \begin{center}
+        % \begin{tikzpicture}
+        %     \node<+->[draw=black, rectangle, minimum size=4cm] at (0,0) {$_{0}B_{2}$};
+        %     \node<.->[fill=greenfilling, draw=greenoutline, circle,  minimum size=1.5cm] at (-1.5,0) {\textcolor{red}{$\xi$}};
+        %     \node<+->[fill=greyfilling, draw=greyoutline, circle,  minimum size=1.5cm] at (1.5,0) {\textcolor{red}{$C:0$}\textcolor{blue}{$/2$}};
+        % \end{tikzpicture}
+
+        \begin{tikzpicture}
+            \begin{scope}[every node/.style={circle,thick,draw}]
+                \node (A) at (0,0) {A};
+                \node (B) at (0,3) {B};
+                \node (C) at (2.5,4) {C};
+                \node (D) at (2.5,2) {D};
+                \node (E) at (2.5,0) {E};
+                \node (F) at (5,3) {F} ;
+            \end{scope}
+            
+            \begin{scope}[>={Stealth[black]},
+                          every node/.style={fill=white,circle},
+                          every edge/.style={draw=red,very thick}]
+                \path [->] (A) edge node {$5$} (B);
+                \path [->] (B) edge node {$3$} (C);
+                \path [->] (A) edge node {$4$} (D);
+                \path [->] (D) edge node {$3$} (C);
+                \path [->] (A) edge node {$3$} (E);
+                \path [->] (D) edge node {$3$} (E);
+                \path [->] (D) edge node {$3$} (F);
+                \path [->] (C) edge node {$5$} (F);
+                \path [->] (E) edge node {$8$} (F);
+            \end{scope}
+        \end{tikzpicture}
+
+    \end{center}
+
+    \begin{animateinline}[autoplay]{20}
+        \multiframe{21}{dim=8cm+-0.4cm}{
+            \makebox[\widthof{\hspace{8cm}Hello.}][l]{\strut\hspace{\dim}Hello.}
+        }
+    \end{animateinline}
+    
+\end{frame}

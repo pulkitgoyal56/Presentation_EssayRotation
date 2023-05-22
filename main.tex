@@ -1,0 +1,632 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+\documentclass[t,aspectratio=169,xcolor=dvipsnames]{beamer}
+\setbeameroption{show notes on second screen=right}
+\setbeamercovered{dynamic} % transparent % highly dynamic
+
+\usetheme{Madrid}
+\colorlet{beamer@blendedblue}{orange!75!black}
+% \useoutertheme[subsection=false]{miniframes}
+
+% \setbeamertemplate{navigation symbols}{}
+% \setbeamertemplate{note page}{\pagecolor{yellow!5}\insertnote}\usepackage{palatino}
+% \setbeamertemplate{footline}[frame number]{}
+
+% \usepackage[para]{footmisc}
+\setbeamerfont{footnote}{size=\tiny}
+\AtBeginEnvironment{frame}{\setcounter{footnote}{0}}
+\newcommand\blfootcitetext[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footcitetext{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+\setcounter{tocdepth}{3}
+\AtBeginSection[]{
+    {\setbeamercolor{background canvas}{bg=gray}
+    \begin{frame}[noframenumbering]{Overview}
+        \tableofcontents[sectionstyle=shaded/shaded,subsectionstyle=shaded/shaded/shaded,subsubsectionstyle=shaded/shaded/shaded/shaded]
+    \end{frame}
+    \begin{frame}[noframenumbering]{Overview}
+        \tableofcontents[sectionstyle=show/shaded,subsectionstyle=show/show/shaded,subsubsectionstyle=show/show/show/shaded]
+    \end{frame}}
+}
+\makeatletter
+    \newcommand{\trickbeamer}{\advance\beamer@slideinframe by-1}
+\makeatother
+
+\usepackage{appendixnumberbeamer}
+\usepackage{hyperref}
+\usepackage{graphicx} % Allows including images
+% \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{CJKutf8} % For Kaomoji
+\usepackage{amsmath}
+
+\usepackage[style=authoryear,natbib=true,backend=biber]{biblatex}
+% \setbeamertemplate{bibliography item}{}
+\renewcommand*{\bibfont}{\scriptsize{}}
+\setlength{\bibhang}{11pt}
+% \setlength{\labelnumberwidth}{14pt}
+% \makeatletter
+%   \mode<presentation>{
+%       \newlength{\beamer@bibiconwidth}
+%       \settowidth\beamer@bibiconwidth{\usebeamertemplate*{bibliography item}}
+%       \setlength{\labelwidth}{-\beamer@bibiconwidth}
+%       \addtolength{\labelwidth}{2\labelsep}
+%       \addtolength{\bibhang}{\labelsep}
+%   }
+% \makeatother
+\addbibresource{ref.bib} % \bibliography{ref.bib}
+
+\newcommand{\citec}[1]{\hfill\textcolor{lightgray}{\citep{#1}}}
+\newcommand{\citef}[1]{\only<.->{\footcite{#1}}}
+\newcommand{\cname}[2]{\texorpdfstring{#1 \citec{#2}}{#1}}
+
+\usepackage{xcolor}
+\definecolor{midgray}{RGB}{233,233,233}
+\definecolor{peach}{RGB}{252,242,239}
+\definecolor{gray}{RGB}{244,244,244}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{arrows.meta,arrows}
+
+\usepackage{animate}
+% \beamerdefaultoverlayspecification{<+->}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+\title[]{Can Self-Exploring RL Agents Model Compulsive Behavior?}
+\subtitle{\footnotesize Essay Rotation}
+
+\author[]{\Large Pulkit Goyal}
+\institute[]
+{
+    M.Sc. Student, Neural Information Processing \\
+    University of Tübingen
+    \vskip 12pt
+
+    \textit{Supervised by} \\\vspace{2pt}
+    {\footnotesize Cansu Sancaktar}\\
+    Autonomous Learning Group, MPI-IS
+
+    \vspace{24.5pt}
+    \normalsize\today
+}
+\date{}
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+\begin{document}
+
+%************************************************
+% Print the title page as the first slide
+\begin{frame}
+    \titlepage
+    
+    \note{Hi, I am Pulkit Goyal. I study Neural Infromation Processing at the Graduate Training Center of Neuroscience here at the university.\\~\\
+    
+    For the past few weeks, with guidance from Canse, I have been reading about self-supervised reinforcement learning.\\~\\
+    
+    I also have interest in the computational modelling of neurobiological and neurodevelopmental mental disorders, in particular OCD, which I had been reading a lot about lately, so I thought maybe I can link them, and I came up with this question | \textit{Can Self-Exploring RL Agents Model Compulsive Behavior?}\\~\\
+    
+    In this short presentation, I am going to start by talking about.}
+\end{frame}
+%************************************************
+
+%************************************************
+\begin{frame}{Overview}
+    % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+    \note<1>{In this short presentation, I am going to start by talking about.}
+    
+    \note<2>{What OCD is, and its salient symptoms.}
+
+    \note<3>{Then, I am going to present a computational model of OCD by \citet{ocd}.
+        \begin{itemize}
+            \item But, you might be wondering about the link between OCD and intrinsically-motivated reinforcement learning.
+            \item Well, this study models OCD under a Partially-Observable Markov Decision Processs (POMDP) paradigm.
+        \end{itemize}
+    }
+
+    \note<4-5>{It is generally accepted that the nervous system operates in a probabilistic fashion that is close to the optimal prescribed by Bayesian statistics (termed as the Bayesian-Brain Framework).
+        \begin{itemize}
+            \item Under this conceptual basis, there's a well-established theory in neuroscience called the free-energy principle \citep{friston2010free}, which overarchs hypotheses such as \onslide<5->{\textit{predictive coding}, and \textit{active inference}.}
+            \item<5> The free-energy formulation furnishes a unified account of both action and perception.
+            \item<5> (Friston also believes his principle applies to mental disorders as well as to artificial intelligence.)
+            \item<5> The underlying mathematical formulation of the free-energy principle is one harmonious with the backbone of many self-supervised RL heuristics.
+        \end{itemize}
+    }
+
+    \note<6-9>{Most recent formulations of intrinsic motivation in self-supervised RL can be connected to the free-energy principle, in particular minimisation of \textit{surprisal}.\\~\\
+
+    I am going to give examples of three such methods; % <EPHM> four
+        \begin{itemize}
+            \item<7-> Variational Information Maximizing Exploration (VIME) \citep{houthooft2016vime}
+            \item<8-> Surprise-based Intrinsic Motivation \citep{achiam2017surprise}
+            \item<9-> An model-based RL setup, based on Active Inference \citep{tschantz2020reinforcement}
+            % \item<10-> Finally, a study that solves a benchmark task in RL (the mountain-car problem) without resorting to a reward-based paradigm or invoking the Bellman equation or a value-function. \citep{friston2009reinforcement}
+
+            % ACM
+            % Random Network Distillation
+            % Disagreement/Plan-to-explore
+
+        \end{itemize}
+    }
+
+    \note<10>{Finally, I am going to motivate a method of modeling OCD in intrinsically-motivated RL agents, under the free-energy principle.}
+
+    \note<11-13>{In doing so, I'm going to refer to other methods used by other theoretical studies that model related mental disorders, in particular,
+        \begin{itemize}
+            \item<12-> Schizophrenia \citep{schizophrenia}
+            \item<13-> Autism Spectrum Disorder \citep{asd}
+        \end{itemize}
+    }
+
+    \trickbeamer
+    \tableofcontents[pausesections,pausesubsections]
+\end{frame}
+%************************************************
+
+%************************************************
+\section{\cname{Obsessive-Compulsive Disorder (OCD)}{abramowitz2014obsessive}}
+%------------------------------------------------
+\begin{frame}{What is OCD?}
+    \blfootcitetext{abramowitz2014obsessive}
+    \note<.>{So, what is OCD?}
+    \trickbeamer
+    \begin{itemize}
+        \item<+-> Neurobiological disorder
+        \note<.>{Eponymously, this disorder has two aspects.}
+        
+        \item<+-> \textit{Obsessions} | Intrusive (unwanted/inappropriate) thoughts
+        \note<.>{\textbf{1. Obsessions}
+            \begin{itemize}
+                \item These are recurrent and persistent thoughts, impulses, or images that cause distressing emotions such as anxiety, fear or disgust.
+                \item Many people with OCD recognize that these thoughts are excessive or unreasonable. However, the distress caused by these intrusive thoughts cannot be resolved by logic or reasoning.
+            \end{itemize}
+            Obsessions can be fears of anything, like fears of physical and emotional contamination from the environment or other people, extreme worry something is not complete, concern with order, symmetry, or precision, or the fear of losing or discarding something important.
+        }
+        
+        \item<+-> \textit{Compulsions} | Actions the person feels compelled to perform
+        \note<.>{\textbf{2. Compulsions}
+            \begin{itemize}
+                \item These are repetitive behaviors or mental acts that a person feels driven to perform. 
+                \item The behaviors typically prevent or reduce a person's distress related to an obsession temporarily, and they are then more likely to do the same in the future.
+                \item They might also occur completely unrelated to the obsession.
+                \item In the most severe cases, a constant repetition of rituals may fill the day, making a normal routine impossible.
+            \end{itemize}
+            Common compulsions include (the clichéd) excessive hand washing, cleaning, counting, ordering, hoarding, praying, and checking things.
+        }        
+        
+        \item<+-> Multi-faceted characteristics
+        \note<.>{The characteristics of this disorder are multi-faceted.
+            \begin{itemize}
+                \item Preoccupation with numbers
+                \item Pattern fixation
+                \item Delusions similar to schizophrenia
+                \item Magical thoughts | associations between unconnected things
+                \item People with OCD may also avoid certain people, places, or situations that cause them distress and trigger obsessions and/or compulsions.
+            \end{itemize}
+        }
+
+        \item<+-> Causal relationship between \textit{obsessions} and \textit{compulsions} is disputed
+        \begin{itemize}
+            \item Obsessions $\longrightarrow$ Compulsions (OCD)
+            \item Compulsions $\longrightarrow$ Obsessions (COD) \citef{gillan2014goal}
+        \end{itemize}
+        \note<.>{
+            \begin{itemize}
+                \item Historically, compulsions are thought of as reactions to quell the anxiety caused by obsessions
+                \item But there is evidence from experimental studies that propose that obsessions might just be post-hoc rationalisations of compulsive behavior. \citep{gillan2014goal}
+            \end{itemize}
+        }
+        
+        \item<+-> Disorder of Inflexibility/Preservation \citef{fradkin2018rigidly}
+        \note<.>{
+            \begin{itemize}
+                \item Inflexibility | Inability to change behavior on changes in the environment, despite being aware of a better action/behavior policy.
+                \item Preservation | Fixation on an idea.
+            \end{itemize}
+        }
+
+        \item<+-> Underlying mechanisms not well understood
+        \begin{itemize}
+            \item Inflated sense of responsibility?
+            \item Intolerance of uncertainty?
+        \end{itemize}
+    \end{itemize}
+    \vspace*{5mm}
+\end{frame}
+%------------------------------------------------
+\subsection*{Low-Level Characteristics of OCD}
+\begin{frame}[c]{What are some characteristics we can focus on?}
+    \trickbeamer
+    \begin{itemize}
+        \item<+-> \textbf{Indicisiveness} and excessive pathological doubt
+        \begin{itemize}
+            \item[] %Difficulty in relying on past actions to predict consequences of own actions
+        \end{itemize}
+        % \note[item]<.->{Difficulty in relying on past actions to predict consequences of own actions}
+        
+        \item<+-> \textbf{Repeated checking} and excessive information gathering (\textit{over-exploration} or \textit{over-complicated exploration})
+        \begin{itemize}
+            \item[] %Uncertainty regarding current state
+        \end{itemize}
+        % \note[item]<.->{Uncertainty regarding current state}
+        
+        \item<+-> \textbf{Over-responsiveness to sensory stimulus}, thoughts, and feedback
+        \begin{itemize}
+            \item[] %Over-relaince on sensory information
+        \end{itemize}
+        % \note[item]<.->{Over-relaince on sensory information}
+
+        \item<+-> \textbf{Over-reliance on habits} at the \textit{expense of goal-directed behavior}
+        \begin{itemize}
+            \item[] %Model-free control?
+            \item[] %Over-estimation of the diversity of the possible chain of events
+        \end{itemize}
+        % \note[item]<.->{Overestimating the diversity of the possible chain of events}
+    \end{itemize}
+\end{frame}
+%************************************************
+
+%************************************************
+\section{\cname{A Computational Model of OCD}{ocd}} % | Excessive Uncertainty Regarding State Transitions
+\begin{frame}{A Computational Model of OCD}
+    \blfootcitetext{fradkin2018rigidly}
+    \note{The model is based on the hypothesis that excessive uncertainty regarding state transitions is the root underlying cause of the disorder}
+    \begin{itemize}
+        \item \textbf{Excessive uncertainty regarding state transitions} as the underlying cause
+    \end{itemize}
+    
+    \begin{columns}[t] % [c] or [t]
+        \column{.45\textwidth} % Left column and width
+            \begin{figure}
+                \includegraphics<+(1)->[width=\linewidth]{Images/Low_TU.png}
+            \end{figure}
+        
+        \column{.5\textwidth} % Right column and width
+            \begin{figure}
+                \includegraphics<+->[width=0.8\linewidth]{Images/High_TU.png}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+%------------------------------------------------
+\subsection{\cname{Free-Energy Principle}{friston2010free}}
+%------------------------------------------------
+{\setbeamercolor{background canvas}{bg=peach}
+\setbeamercovered{}
+%_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+\begin{frame}{Free-Energy Principle}
+    \blfootcitetext{friston2010free}
+    A unified theory and mathematical framework of cognition and action.
+    \begin{align*}
+        & {p(s, o) - \text{\textit{true} generative model of the environment}}\\
+        & Q(s \mid o ; \phi) - \text{\textit{approximate} posterior density; parameterized by}\ \phi\\~\\
+        & s - \text{hidden state};\quad
+        o - \text{observation};\quad
+        a - \text{action} \sim\pi(t)
+    \end{align*}
+
+    \begin{align*}
+        \onslide<+->{\underbrace{\mathbb{F}(a_t)}_{\text{Variational Free Energy}}} &
+        \onslide<+->{=\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t, a_t ; \phi\right) \| p\left(o_t, s_t\right)\right]}
+        \onslide<+->{=\mathbb{E}_{Q\left(s_t \mid o_t, a_t ; \phi\right)}\left[\ln \frac{Q\left(s_t \mid o_t, a_t ; \phi\right)}{p\left(o_t, s_t\right)}\right]}\\ &
+        \onslide<+->{=\underbrace{\mathbb{E}_{Q\left(s_t \mid o_t, a_t ; \phi\right)}\left[\ln Q\left(s_t \mid o_t ; \phi\right)\right]}_{\text {Entropy }}-\underbrace{\mathbb{E}_{Q\left(s_t \mid o_t, a_t ; \phi\right)}\left[\ln p\left(o_t, s_t\right)\right]}_{\text {Energy}}}
+    \end{align*}
+
+    \note<.->{
+        Free energy as energy minus entropy.
+        \begin{itemize}
+            \item First, it connects the concept of free energy as used in information theory with concepts used in statistical thermodynamics.
+            \item Second, it shows that the free energy can be evaluated by an agent because the energy is the surprise about the joint occurrence of sensations and their perceived causes, whereas the entropy is simply that of the agent’s own recognition density.
+            \item Third, it shows that free energy rests on a generative model of the world, which is expressed in terms of the probability of a sensation and its causes occurring together. This means that an agent must have an implicit generative model of how causes conspire to produce sensory data. It is this model that defines both the nature of the agent and the quality of the free-energy bound on surprise.
+        \end{itemize}
+    }
+    
+    % \begin{align*}
+    %    % p(x \mid o)=\frac{p(x, o)}{p(o)}=\frac{p(o \mid x) p(x)}{\int p(o \mid x) p(x) d x}\\
+    %     p_{\text{Bayes}}({\dot {\psi }},s,a,\mu \mid \psi )=p_{S}(s\mid \psi ,a)p_{\Psi }({\dot {\psi }}\mid \psi ,a) p_{A}(a\mid \mu ,s) p_{R}(\mu \mid s)
+    % \end{align*}
+    % \begin{align*}{
+    %     \underset {\mathrm {free-energy} }{\underbrace {F(\mu ,a\,;s)} }}&={\underset {\text{expected energy}}{\underbrace {\mathbb {E} _{q({\dot {\psi }})}[-\log p({\dot {\psi }},s,a,\mu \mid \psi )]} }}-{\underset {\mathrm {entropy} }{\underbrace {\mathbb {H} [q({\dot {\psi }}\mid s,a,\mu ,\psi )]} }}\\&={\underset {\mathrm {surprise} }{\underbrace {-\log p(s)} }}+{\underset {\mathrm {divergence} }{\underbrace {\mathbb {KL} [q({\dot {\psi }}\mid s,a,\mu ,\psi )\parallel p_{\text{Bayes}}({\dot {\psi }}\mid s,a,\mu ,\psi )]} }}\\&\geq {\underset {\mathrm {surprise} }{\underbrace {-\log p(s)} }}
+    % \end{align*}
+    % \begin{align*}
+    %     \mu ^{*}&={\underset {\mu }{\operatorname {arg\,min} }}\{F(\mu ,a\,;\,s))\}\\a^{*}&={\underset {a}{\operatorname {arg\,min} }}\{F(\mu ^{*},a\,;\,s)\}
+    % \end{align*}
+
+\end{frame}
+
+\begin{frame}{Free-Energy Principle | Predictive Coding}
+    \blfootcitetext{friston2010free}
+    \begin{align*}
+        \underbrace{\mathbb{F}(a_t)}_{\text{Variational Free Energy}} &
+        \onslide<+->{=\underbrace{-\ln p\left(o_t\right)}_{\text {Surprisal (Negative Evidence)}}+\underbrace{\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t, a_t; \phi\right) \| p\left(s_t \mid o_t\right)\right]}_{\text {Posterior Divergence }}}\\ &
+        \onslide<+->{\geq \underbrace{-\ln p\left(o_t\right)}_{\text {Surprisal (Negative Evidence)}}}\\
+        % 
+        \phantom{\underbrace{\mathbb{F}(a_t)}_{\text{Variational Free Energy}}} &
+        \phantom{=\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t ; \phi\right) \| p\left(o_t, s_t\right)\right]
+        =\mathbb{E}_{Q\left(s_t \mid o_t ; \phi\right)}\left[\ln \frac{Q\left(s_t \mid o_t ; \phi\right)}{p\left(o_t, s_t\right)}\right]}
+    \end{align*}
+
+    \note<1>{Free energy as surprise plus a divergence term.\\~\\
+    
+    The (perceptual) divergence is just the difference between the recognition density and the conditional density (or posterior density) of the causes of a sensation, given the sensory signals. This conditional density represents the best possible guess about the true causes. The difference between the two densities is always non-negative and free energy is therefore an upper bound on surprise. Thus, minimizing free energy by changing the recognition density (without changing sensory data) reduces the perceptual divergence, so that the recognition density becomes the conditional density and the free energy becomes surprise.}
+
+    \note<2>{Since the KL-divergence is always positive, the variational free-energy is an upper bound on the surprisal. (It is the negative Evidence Lower Bound (ELBO), in variational inference).}
+
+    \begin{align*}
+        \onslide<+>{\mathbb{F} \approx -\ln p\left(o_t\right)\\
+        Q\left(s_t \mid o_t ; \phi\right) \approx p\left(o_t, s_t\right)}
+    \end{align*}
+
+    \note<.>{As it is minimised, it becomes an increasingly accurate estimate of the surprisal. And at the same time, the beliefs of the agent converge to the true dynamics.}
+\end{frame}
+
+\begin{frame}{Free-Energy Principle | Active Inference}
+    \blfootcitetext{friston2010free}
+    \begin{align*}
+        \underbrace{\mathbb{F}(a_t)}_{\text{Variational Free Energy}} &
+        \onslide<+->{=\underbrace{-\mathbb{E}_{Q\left(s_t \mid o_t, a_t ; \phi\right)}\left[\ln p\left(o_t \mid s_t\right)\right]}_{\text {Accuracy }}+\underbrace{\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t ; \phi\right) \| p\left(s_t\right)\right]}_{\text {Complexity }}} \\
+        % 
+        \underbrace{\mathcal{G}_\tau(\pi)}_{\text{Expected Free Energy}} & =\mathbb{E}_{Q\left(o_\tau, x_\tau \mid \pi\right)}\left[\ln Q\left(x_\tau \mid \pi\right)-\ln \tilde{p}\left(o_\tau, x_\tau\right)\right] \\
+        & \approx \mathbb{E}_{Q\left(\left(_\tau, x_\tau \mid \pi\right)\right.}\left[\ln Q\left(x_\tau \mid \pi\right)-\ln \tilde{p}\left(o_\tau\right)-\ln Q\left(x_\tau \mid o_\tau\right)\right] \\
+        & \approx \underbrace{-\mathbb{E}_{Q\left(o_\tau, x_\tau \mid \pi\right)}\left[\ln \tilde{p}\left(o_\tau\right)\right]}_{\text {Extrinsic Value }}-\underbrace{\mathbb{E}_{Q\left(o_\tau\right)} \mathbf{D}_{K L}\left[Q\left(x_\tau \mid o_\tau\right)|| Q\left(x_\tau \mid \pi\right)\right]}_{\text {Epistemic Value }}
+        % 
+        \phantom{\underbrace{\mathbb{F}(a_t)}_{\text{Variational Free Energy}}} &
+        \phantom{=\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t ; \phi\right) \| p\left(o_t, s_t\right)\right]
+        =\mathbb{E}_{Q\left(s_t \mid o_t ; \phi\right)}\left[\ln \frac{Q\left(s_t \mid o_t ; \phi\right)}{p\left(o_t, s_t\right)}\right]}
+    \end{align*}
+
+    \note<.>{Free energy as complexity minus accuracy, using terms from the model comparison literature.\\~\\
+    
+    Complexity is the difference between the recognition density and the prior density on causes; it is also known as Bayesian surprise15 and is the difference between the prior density — which encodes beliefs about the state of the world before sensory data are assimilated — and posterior beliefs, which are encoded by the recognition density. Accuracy is simply the surprise about sensations that are expected under the recognition density. This formulation shows that minimizing free energy by changing sensory data (without changing the recognition density) must increase the accuracy of an agent’s predictions. In short, the agent will selectively sample the sensory inputs that it expects. This is known as active inference.}
+\end{frame}
+%_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+% \subsubsection{Predictive Coding and Active Inference}
+% \begin{frame}{Predictive Coding and Active Inference}
+%     \blfootcitetext{friston2010free}
+    
+% \end{frame}
+%_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+}
+%------------------------------------------------
+
+\begin{frame}{A Computational Model of OCD | Theory}
+    \blfootcitetext{fradkin2018rigidly}
+    \begin{itemize}
+        \item<+-> Faulty state-transition function, $P(s'|s, a)$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[c]{What are the characteristics we can focus on?}
+    \trickbeamer
+    \begin{itemize}
+        \item \textbf{Indicisiveness} and excessive pathological doubt
+        \begin{itemize}
+            \item<+-> Difficulty in relying on past actions to predict consequences of own actions
+        \end{itemize}
+        % \note[item]<.->{Difficulty in relying on past actions to predict consequences of own actions}
+        
+        \item \textbf{Repeated checking} and excessive information gathering (\textit{over-exploration} or \textit{over-complicated exploration})
+        \begin{itemize}
+            \item<+-> Uncertainty regarding current state
+        \end{itemize}
+        % \note[item]<.->{Uncertainty regarding current state}
+        
+        \item \textbf{Over-responsiveness to sensory stimulus}, thoughts, and feedback
+        \begin{itemize}
+            \item<+-> Over-reliance on sensory information
+        \end{itemize}
+        % \note[item]<.->{Over-relaince on sensory information}
+
+        \item \textbf{Over-reliance on habits} at the \textit{expense of goal-directed behavior}
+        \begin{itemize}
+            % \item<4-> Model-free control?
+            \item<+-> Over-estimation of the diversity of the possible chain of events
+        \end{itemize}
+        % \note[item]<.->{Overestimating the diversity of the possible chain of events}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{A Computational Model of OCD | Conclusions}
+    \blfootcitetext{fradkin2018rigidly}
+    % Simulations based on the theory was able to explain,
+    \trickbeamer
+    \begin{itemize}
+        \item<+-> Persistent experiences that actions were not adequately performed
+        \note[item]<.>{Impaired ability to rely on action planning and execution as sources of information regarding the successful completion of actions, creating a recurring experience that (compulsive) actions were not done 'right'}
+
+        \item<+-> Emergence of compulsions and predominance of habits over goal-directed behavior
+        \note[item]<.>{Evolution of excessive checking and foraging behaviors, and, under some conditions – overreliance on habits}
+
+        \item<+-> Increase in weighting of immediate feedback
+        \note[item]<.>{which can potentially explain different types of obsessions, including intrusive thoughts and patients' sensory overresponsiveness}
+    \end{itemize}
+    \begin{figure}
+        \includegraphics<+->[width=0.4\linewidth]{Images/conclusions_OCD.png}
+    \end{figure}
+\end{frame}
+%************************************************
+
+%************************************************
+\section{Active Learning and Self-Supervised Reinforcement Learning}
+%------------------------------------------------
+\subsection{\cname{Variational Information Maximizing Exploration (VIME)}{houthooft2016vime}}
+\begin{frame}{Variational Information Maximizing Exploration (VIME)}
+    \blfootcitetext{houthooft2016vime}
+    
+\end{frame}
+%------------------------------------------------
+\subsection{\cname{Surprise-based Intrinsic Motivation}{achiam2017surprise}}
+\begin{frame}{Surprise-based Intrinsic Motivation}
+    \blfootcitetext{achiam2017surprise}
+    
+\end{frame}
+%------------------------------------------------
+\subsection{\cname{Reinforcement Learning Through Active Inference}{tschantz2020reinforcement}}
+\begin{frame}{Reinforcement Learning Through Active Inference}
+    \blfootcitetext{tschantz2020reinforcement}
+    
+\end{frame}
+%------------------------------------------------
+% \hyperlink{RLvsAIf}{\beamerbutton{Reinforcement Learning or Active Inference?}}
+% \subsection*{Reinforcement Learning or Active Inference?}{friston2009reinforcement}
+% \begin{frame}<0>[noframenumbering]{Reinforcement Learning or Active Inference?}
+%     \blfootcitetext{friston2009reinforcement}
+    
+% \end{frame}
+%************************************************
+
+%************************************************
+\section{Modeling Obsessive-Compulsive Behavior in Self-Exploring RL Agents} % Inspiration from mentioned studies
+%------------------------------------------------
+\begin{frame}{Modeling Obsessive-Compulsive Behavior in Self-Exploring RL Agents}
+    \begin{itemize}
+        \item[] 
+    \end{itemize}
+\end{frame}
+%------------------------------------------------
+\subsection{Computational Models of Related Mental Disorders}
+%------------------------------------------------
+{\setbeamercolor{background canvas}{bg=peach}
+%_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+\subsubsection{\cname{Schizophrenia}{schizophrenia}}
+\begin{frame}{Schizophrenia}
+    \blfootcitetext{schizophrenia}
+    
+\end{frame}
+%_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+\subsubsection{\cname{Autism Spectrum Disorder (ASD)}{asd}}
+\begin{frame}{Autism Spectrum Disorder (ASD)}
+    \blfootcitetext{asd}
+    
+\end{frame}
+%_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+}
+%------------------------------------------------
+\begin{frame}{Modeling Obsessive-Compulsive Behavior in Self-Exploring RL Agents}
+\end{frame}
+%************************************************
+
+%************************************************
+\section*{}
+\begin{frame}{Summary}
+    \begin{itemize}
+        \item Active inference based navigation and planning \footcite{kaplan2018planning} $\longleftrightarrow$ Options framework (RL)?
+    \end{itemize}
+\end{frame}
+%************************************************
+
+%************************************************
+%------------------------------------------------
+
+% \note[itemize]{
+%     \item point 1
+%     \item point 2
+% }
+
+%------------------------------------------------
+
+% \begin{frame}{Frame Title}
+%     \begin{enumerate}[<+->]
+%         \item ()
+%         \item ()
+%     \end{enumerate}
+% \end{frame}
+
+%------------------------------------------------
+
+% \begin{columns}[c] % [c] or [t]
+%     \column{.45\textwidth} % Left column and width
+%     \column{.5\textwidth} % Right column and width
+% \end{columns}
+
+%------------------------------------------------
+
+% \begin{table}
+%     \begin{tabular}{l l l}
+%         \toprule
+%         \textbf{} & \textbf{} & \textbf{} \\
+%         \midrule
+%         ()         & ()           & ()               \\
+%         \bottomrule
+%     \end{tabular}
+%     \caption{}
+% \end{table}
+
+%------------------------------------------------
+
+% \begin{frame}{Theorem}
+%     \begin{theorem}[]
+%         $$
+%     \end{theorem}
+% \end{frame}
+
+%------------------------------------------------
+
+% \begin{figure}
+%     \includegraphics[width=0.8\linewidth]{}
+% \end{figure}
+
+%------------------------------------------------
+
+% \begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
+%     \frametitle{Citation}
+%     An example of the \verb|\cite| command to cite within the presentation:\\~
+%     This statement requires citation \footcite{pl, yl}.
+% \end{frame}
+
+%------------------------------------------------
+%************************************************
+
+%************************************************
+\section[]{}
+\begin{frame}[allowframebreaks]{References}
+    % \footnotesize{
+    %     \begin{thebibliography}{99}
+    %         \bibitem[Smith, 2012]{p1} John Smith (2012)
+    %         \newblock Title of the publication
+    %         \newblock \emph{Journal Name} 12(3), 45 -- 678.
+    %     \end{thebibliography}
+    % }
+    % \bibliographystyle{apalike}
+    \printbibliography
+\end{frame}
+%************************************************
+
+%************************************************
+\begin{frame}[c]
+    \Huge{\centerline{Thank You!}}\vspace{12pt}
+    \centering \Large \begin{CJK}{UTF8}{min} (⌒\_⌒) \end{CJK}
+\end{frame}
+%************************************************
+
+%----------------------------------------------------------------------------------------
+%	APPENDIX
+%----------------------------------------------------------------------------------------
+\newcounter{framenumberappendix}\setcounter{framenumberappendix}{\value{framenumber}}
+\pdfstringdefDisableCommands{\def\translate#1{#1}}
+\appendix
+\addtocounter{framenumber}{\value{framenumberappendix}}
+\addtocounter{framenumberappendix}{-\value{framenumber}}
+
+\setbeamercolor{background canvas}{bg=midgray}
+
+%************************************************
+\section*{Appendix}
+%------------------------------------------------
+\subsection*{\cname{Reinforcement Learning or Active Inference?}{friston2009reinforcement}}
+\begin{frame}[label=RLvsAIf]{Reinforcement Learning or Active Inference?}
+    \blfootcitetext{friston2009reinforcement}
+    
+\end{frame}
+%************************************************
+
+\end{document}
+%----------------------------------------------------------------------------------------
