@@ -13,6 +13,10 @@
 % \setbeamertemplate{note page}{\pagecolor{yellow!5}\insertnote}\usepackage{palatino}
 % \setbeamertemplate{footline}[frame number]{}
 
+\setbeamertemplate{itemize/enumerate body begin}{\normalsize}
+\setbeamertemplate{itemize/enumerate subbody begin}{\normalsize}
+\setbeamertemplate{itemize/enumerate subsubbody begin}{\normalsize}
+
 % \usepackage[para]{footmisc}
 \setbeamerfont{footnote}{size=\tiny}
 \AtBeginEnvironment{frame}{\setcounter{footnote}{0}}
@@ -34,15 +38,22 @@
     \end{frame}}
 }
 \makeatletter
-    \newcommand{\trickbeamer}{\advance\beamer@slideinframe by-1}
+    \newcommand{\trickbeamer}{\advance\beamer@slideinframe by-1} % \stepcounter{beamerpauses}
+    \newcommand{\trickbeameri}[1]{\advance\beamer@slideinframe by#1}
+    \newcommand{\untrickbeamer}{\advance\beamer@slideinframe by1}
 \makeatother
 
+\usepackage{lmodern}
+
 \usepackage{appendixnumberbeamer}
+
 \usepackage{hyperref}
 \usepackage{graphicx} % Allows including images
 % \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
 \usepackage{CJKutf8} % For Kaomoji
-\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsmath, mathtools}
+% \usepackage{enumitem}
 
 \usepackage[style=authoryear,natbib=true,backend=biber]{biblatex}
 % \setbeamertemplate{bibliography item}{}
@@ -74,12 +85,20 @@
 \usetikzlibrary{arrows.meta,arrows}
 
 \usepackage{animate}
-% \beamerdefaultoverlayspecification{<+->}
+\beamerdefaultoverlayspecification{<+->}
+\newcommand<>{\uncoverubrace}[2]{%
+  \onslide#3 \untrickbeamer \underbrace{ \onslide<1->#1%
+  \onslide#3 }_{#2} \onslide<1->%
+}
+\newcommand<>{\uncoverobrace}[2]{%
+  \onslide#3 \untrickbeamer \overbrace{ \onslide<1->#1%
+  \onslide#3 }^{#2} \onslide<1->%
+}
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
-\title[]{Can Self-Exploring RL Agents Model Compulsive Behavior?}
+\title[]{Can Self-Exploring RL Model Obsessive-Compulsive Behavior?}
 \subtitle{\footnotesize Essay Rotation}
 
 \author[]{\Large Pulkit Goyal}
@@ -110,11 +129,11 @@
     
     \note{Hi, I am Pulkit Goyal. I study Neural Infromation Processing at the Graduate Training Center of Neuroscience here at the university.\\~\\
     
-    For the past few weeks, with guidance from Canse, I have been reading about self-supervised reinforcement learning.\\~\\
+    For the past few weeks, with guidance from Cansu, I have been reading about self-supervised reinforcement learning.\\~\\
     
-    I also have interest in the computational modelling of neurobiological and neurodevelopmental mental disorders, in particular OCD, which I had been reading a lot about lately, so I thought maybe I can link them, and I came up with this question | \textit{Can Self-Exploring RL Agents Model Compulsive Behavior?}\\~\\
+    I also have interest in the computational/neuro-robotics modelling of neurobiological and neurodevelopmental mental disorders, in particular OCD, which coincidentally I had been reading a lot about lately, so I thought maybe I can link them, and I came up with this question | \textit{Can Self-Exploring RL Agents Model Compulsive Behavior?}\\~\\
     
-    In this short presentation, I am going to start by talking about.}
+    For my essay I read literature from experimental and theoretical points of view, to unite these apparently disparate fields under a common mathematical framework.}
 \end{frame}
 %************************************************
 
@@ -134,7 +153,7 @@
 
     \note<4-5>{It is generally accepted that the nervous system operates in a probabilistic fashion that is close to the optimal prescribed by Bayesian statistics (termed as the Bayesian-Brain Framework).
         \begin{itemize}
-            \item Under this conceptual basis, there's a well-established theory in neuroscience called the free-energy principle \citep{friston2010free}, which overarchs hypotheses such as \onslide<5->{\textit{predictive coding}, and \textit{active inference}.}
+            \item Under this conceptual basis, there's a well-established theory in neuroscience called the free-energy principle \citep{friston2010free,friston2017active}, which overarchs hypotheses such as \onslide<5->{\textit{predictive coding}, and \textit{active inference}.}
             \item<5> The free-energy formulation furnishes a unified account of both action and perception.
             \item<5> (Friston also believes his principle applies to mental disorders as well as to artificial intelligence.)
             \item<5> The underlying mathematical formulation of the free-energy principle is one harmonious with the backbone of many self-supervised RL heuristics.
@@ -175,14 +194,14 @@
 \section{\cname{Obsessive-Compulsive Disorder (OCD)}{abramowitz2014obsessive}}
 %------------------------------------------------
 \begin{frame}{What is OCD?}
-    \blfootcitetext{abramowitz2014obsessive}
-    \note<.>{So, what is OCD?}
     \trickbeamer
+    \note<.>{So, what is OCD?}
+    \blfootcitetext{abramowitz2014obsessive, adams2022everything, gillan2016characterizing, rachman1998cognitive}
     \begin{itemize}
-        \item<+-> Neurobiological disorder
+        \item Neurobiological disorder
         \note<.>{Eponymously, this disorder has two aspects.}
         
-        \item<+-> \textit{Obsessions} | Intrusive (unwanted/inappropriate) thoughts
+        \item \textit{Obsessions} | Intrusive (unwanted/inappropriate) thoughts
         \note<.>{\textbf{1. Obsessions}
             \begin{itemize}
                 \item These are recurrent and persistent thoughts, impulses, or images that cause distressing emotions such as anxiety, fear or disgust.
@@ -191,111 +210,144 @@
             Obsessions can be fears of anything, like fears of physical and emotional contamination from the environment or other people, extreme worry something is not complete, concern with order, symmetry, or precision, or the fear of losing or discarding something important.
         }
         
-        \item<+-> \textit{Compulsions} | Actions the person feels compelled to perform
+        \item \textit{Compulsions} | Actions the person feels compelled to perform
         \note<.>{\textbf{2. Compulsions}
             \begin{itemize}
                 \item These are repetitive behaviors or mental acts that a person feels driven to perform. 
                 \item The behaviors typically prevent or reduce a person's distress related to an obsession temporarily, and they are then more likely to do the same in the future.
                 \item They might also occur completely unrelated to the obsession.
                 \item In the most severe cases, a constant repetition of rituals may fill the day, making a normal routine impossible.
+                \item<.> Engaging in these habitual compulsions lead to a paradoxical increase in anxiety forming a vicious loop.
+                \item<.> Common compulsions include (the clichéd) excessive hand washing, cleaning, counting, ordering, hoarding, praying, and checking things, which we will focus on.
             \end{itemize}
-            Common compulsions include (the clichéd) excessive hand washing, cleaning, counting, ordering, hoarding, praying, and checking things.
         }        
         
-        \item<+-> Multi-faceted characteristics
+        \item Multi-faceted characteristics
         \note<.>{The characteristics of this disorder are multi-faceted.
             \begin{itemize}
-                \item Preoccupation with numbers
-                \item Pattern fixation
-                \item Delusions similar to schizophrenia
-                \item Magical thoughts | associations between unconnected things
+                \item Preoccupation with numbers.
+                \item Pattern fixation.
+                \item Delusions similar to schizophrenia.
+                \item Magical thoughts | associations between unconnected things.
                 \item People with OCD may also avoid certain people, places, or situations that cause them distress and trigger obsessions and/or compulsions.
+                \item<.> It is negatively impacted by stress \citep{lewis2019robot} and anxiety \citep{leplow2002specificity}.
             \end{itemize}
         }
 
-        \item<+-> Causal relationship between \textit{obsessions} and \textit{compulsions} is disputed
-        \begin{itemize}
-            \item Obsessions $\longrightarrow$ Compulsions (OCD)
-            \item Compulsions $\longrightarrow$ Obsessions (COD) \citef{gillan2014goal}
-        \end{itemize}
-        \note<.>{
-            \begin{itemize}
-                \item Historically, compulsions are thought of as reactions to quell the anxiety caused by obsessions
-                \item But there is evidence from experimental studies that propose that obsessions might just be post-hoc rationalisations of compulsive behavior. \citep{gillan2014goal}
-            \end{itemize}
-        }
+        % \item<+-> Causal relationship between \textit{obsessions} and \textit{compulsions} is disputed
+        % \begin{itemize}
+        %     \item Obsessions $\longrightarrow$ Compulsions (OCD)
+        %     \item Compulsions $\longrightarrow$ Obsessions (COD) \footcite{gillan2014goal}
+        % \end{itemize}
+        % \note<.>{
+        %     \begin{itemize}
+        %         \item Historically, compulsions are thought of as reactions to quell the anxiety caused by obsessions
+        %         \item But there is evidence from experimental studies that propose that obsessions might just be post-hoc rationalisations of compulsive behavior. \citep{gillan2014goal}
+        %     \end{itemize}
+        % }
         
-        \item<+-> Disorder of Inflexibility/Preservation \citef{fradkin2018rigidly}
+        \item Disorder of Inflexibility/Preservation \footcite{fradkin2018rigidly}
         \note<.>{
             \begin{itemize}
                 \item Inflexibility | Inability to change behavior on changes in the environment, despite being aware of a better action/behavior policy.
                 \item Preservation | Fixation on an idea.
+                \item These ideas are commonly associated with a reversal learning task in which a subject with OCD is generally unable to adapt to a change in the task mechanics, like reward devaluation.
+                \item But there has been contrary evidence to it in the previous decade. \citep{fradkin2018rigidly}
             \end{itemize}
         }
 
-        \item<+-> Underlying mechanisms not well understood
+        \item Habitual vs Goal-directed behavior\footcite{fitzgerald2014model,zainal2023goal,gillan2011disruption,gillan2014goal}
+        \note<.>{Overreliance on habitual behavior and deficits in planning for short/long-term goals. There is a lot of literature that discuss habit formation as a compensatory mechanism for deficits in goal-directed planning.
+        \\~\\\citep{fitzgerald2014model,zainal2023goal,gillan2011disruption,gillan2014goal}}
+
+        \item Underlying mechanisms not well understood
         \begin{itemize}
-            \item Inflated sense of responsibility?
+            \item Inflated sense of responsibility?\footcite{salkovskis1995relationship}
             \item Intolerance of uncertainty?
+            % \item Misinterpretation of physiological variables?
+            \item \alert{Indecision!}
         \end{itemize}
+        \note<.>{A principal symptom of the disorder is pathological indecision.}
     \end{itemize}
     \vspace*{5mm}
 \end{frame}
 %------------------------------------------------
-\subsection*{Low-Level Characteristics of OCD}
-\begin{frame}[c]{What are some characteristics we can focus on?}
-    \trickbeamer
-    \begin{itemize}
-        \item<+-> \textbf{Indicisiveness} and excessive pathological doubt
-        \begin{itemize}
-            \item[] %Difficulty in relying on past actions to predict consequences of own actions
-        \end{itemize}
-        % \note[item]<.->{Difficulty in relying on past actions to predict consequences of own actions}
-        
-        \item<+-> \textbf{Repeated checking} and excessive information gathering (\textit{over-exploration} or \textit{over-complicated exploration})
-        \begin{itemize}
-            \item[] %Uncertainty regarding current state
-        \end{itemize}
-        % \note[item]<.->{Uncertainty regarding current state}
-        
-        \item<+-> \textbf{Over-responsiveness to sensory stimulus}, thoughts, and feedback
-        \begin{itemize}
-            \item[] %Over-relaince on sensory information
-        \end{itemize}
-        % \note[item]<.->{Over-relaince on sensory information}
-
-        \item<+-> \textbf{Over-reliance on habits} at the \textit{expense of goal-directed behavior}
-        \begin{itemize}
-            \item[] %Model-free control?
-            \item[] %Over-estimation of the diversity of the possible chain of events
-        \end{itemize}
-        % \note[item]<.->{Overestimating the diversity of the possible chain of events}
-    \end{itemize}
-\end{frame}
 %************************************************
 
 %************************************************
 \section{\cname{A Computational Model of OCD}{ocd}} % | Excessive Uncertainty Regarding State Transitions
-\begin{frame}{A Computational Model of OCD}
-    \blfootcitetext{fradkin2018rigidly}
-    \note{The model is based on the hypothesis that excessive uncertainty regarding state transitions is the root underlying cause of the disorder}
-    \begin{itemize}
-        \item \textbf{Excessive uncertainty regarding state transitions} as the underlying cause
+% \subsection*{Low-Level Characteristics of OCD}
+% \begin{frame}[c]{What are some practical characteristics we can potentially re-create?}
+%     \blfootcitetext{ocd,fradkin2020doubting}
+%     % \trickbeamer
+%     \begin{itemize}
+%         \item<2-> \textbf{Over-responsiveness to sensory stimulus}, thoughts, and feedback
+%         \begin{itemize}
+%             \item[] %Over-relaince on sensory information
+%         \end{itemize}
+%         % \note[item]<.->{Over-relaince on sensory information}
+        
+%         \item<3-> \textbf{Repeated checking} and excessive information gathering (\textit{over-exploration} or \textit{over-complicated exploration})
+%         \begin{itemize}
+%             \item[] %Uncertainty regarding current state
+%         \end{itemize}
+%         % \note[item]<.->{Uncertainty regarding current state}
+        
+%         \item<4->\textbf{Indicisiveness} and excessive pathological doubt
+%         \begin{itemize}
+%             \item[] %Difficulty in relying on past actions to predict consequences of own actions
+%         \end{itemize}
+%         % \note[item]<.->{Difficulty in relying on past actions to predict consequences of own actions}
+
+%         \item<5-> \textbf{Over-reliance on habits} at the \textit{expense of goal-directed behavior}
+%         \begin{itemize}
+%             \item[] %Model-free control?
+%             \item[] %Over-estimation of the diversity of the possible chain of events
+%         \end{itemize}
+%         % \note[item]<.->{Overestimating the diversity of the possible chain of events}
+%     \end{itemize}
+% \end{frame}
+
+\begin{frame}[c]{A Computational Model of OCD | Overview}
+    \trickbeamer
+    \begin{itemize} \setlength\itemsep{6pt} \vspace{6pt}
+        \item<+-> Seeking Proxies for Internal States (SPIS) \footcite{dar2021seeking}
+        \begin{itemize}
+            \item<.-> Attenuation of access to internal emotional states
+            \item<.->[$\rightarrow$] Engagement in excessive information gathering, vis-à-vis compulsions
+        \end{itemize}\vspace{6pt}
+
+        \item<+-> Impaired goal-directed control and planning \footcite{gillan2016characterizing}
+        \begin{itemize}
+            \item<.->[$\rightarrow$] Over-realiance on habitual behavior, vis-à-vis compulsions
+        \end{itemize}
     \end{itemize}
+    \note<.>{These models lack specific root mechanisms or rigorus mathematical frameworks.}
+\end{frame}
+
+\begin{frame}{A Computational Model of OCD}
+    \blfootcitetext{ocd,fradkin2020doubting}
+    \note<1>{We will focus a mode by \citet{ocd} which does have such a framework.}
+    
+    \begin{itemize}
+        \item<2-> \textbf{\textit{Beliefs} of excessive uncertainty regarding state transitions} as the underlying cause
+    \end{itemize}
+    \note<2>{The model is based on the hypothesis that beliefs of excessive uncertainty regarding state transitions is the root underlying cause of the disorder.}
     
     \begin{columns}[t] % [c] or [t]
         \column{.45\textwidth} % Left column and width
             \begin{figure}
-                \includegraphics<+(1)->[width=\linewidth]{Images/Low_TU.png}
+                \includegraphics<3->[width=\linewidth]{Images/Low_TU.png}
             \end{figure}
         
         \column{.5\textwidth} % Right column and width
             \begin{figure}
-                \includegraphics<+->[width=0.8\linewidth]{Images/High_TU.png}
+                \includegraphics<3->[width=0.8\linewidth]{Images/High_TU.png}
             \end{figure}
     \end{columns}
-\end{frame}
 
+    \note<3>{The paper studies this hypothesis under a Markov Decision Process paradigm, the mechanics of which is based on the free-energy principle.}
+\end{frame}
 %------------------------------------------------
 \subsection{\cname{Free-Energy Principle}{friston2010free}}
 %------------------------------------------------
@@ -303,30 +355,46 @@
 \setbeamercovered{}
 %_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 \begin{frame}{Free-Energy Principle}
-    \blfootcitetext{friston2010free}
-    A unified theory and mathematical framework of cognition and action.
+    \blfootcitetext{friston2010free,friston2017active}
+    \note<1>{The free-energy princple was conceptualised by Karl Friston in 2006.}
+    
+    \begin{itemize}
+        \item<2-> \textbf{A unified theory and mathematical framework of cognition and action}
+    \end{itemize}
+    \note<2>{It has profound implications to both neuroscience and artificial intelligence.\\~\\
+
+    I am going to setup the salient mathematical formulations without going into its details.\\
+    There is an embodied agent trying to model its environment.}
+    % \onslide<+->\centerline{\bf A unified theory and mathematical framework of cognition and action.}
+    \vspace{4pt}
+    % \noindent\hfil\rule{0.5\textwidth}{.4pt}\hfil
+    \onslide<3->{
     \begin{align*}
         & {p(s, o) - \text{\textit{true} generative model of the environment}}\\
-        & Q(s \mid o ; \phi) - \text{\textit{approximate} posterior density; parameterized by}\ \phi\\~\\
+        & Q(s \mid o ;\ \phi) - \text{\textit{approximate} posterior density; parameterized by}\ \phi\\\vspace{2pt}
         & s - \text{hidden state};\quad
         o - \text{observation};\quad
         a - \text{action} \sim\pi(t)
-    \end{align*}
-
+    \end{align*}}
+    \vspace{-12pt}
     \begin{align*}
-        \onslide<+->{\underbrace{\mathbb{F}(a_t)}_{\text{Variational Free Energy}}} &
-        \onslide<+->{=\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t, a_t ; \phi\right) \| p\left(o_t, s_t\right)\right]}
-        \onslide<+->{=\mathbb{E}_{Q\left(s_t \mid o_t, a_t ; \phi\right)}\left[\ln \frac{Q\left(s_t \mid o_t, a_t ; \phi\right)}{p\left(o_t, s_t\right)}\right]}\\ &
-        \onslide<+->{=\underbrace{\mathbb{E}_{Q\left(s_t \mid o_t, a_t ; \phi\right)}\left[\ln Q\left(s_t \mid o_t ; \phi\right)\right]}_{\text {Entropy }}-\underbrace{\mathbb{E}_{Q\left(s_t \mid o_t, a_t ; \phi\right)}\left[\ln p\left(o_t, s_t\right)\right]}_{\text {Energy}}}
+        \onslide<4->{\underbrace{\mathbb{F}(a_t;\ \phi)}_{\text{Variational Free-Energy}}} &
+        \onslide<5->{=\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t, a_t ;\ \phi\right) \| p\left(o_t, s_t\right)\right]}
+        \onslide<6->{=\mathbb{E}_{Q\left(s_t \mid o_t, a_t ;\ \phi\right)}\left[\ln \frac{Q\left(s_t \mid o_t, a_t ;\ \phi\right)}{p\left(o_t, s_t\right)}\right]}\\ &
+        \onslide<7->{=\quad\underbrace{\mathbb{E}_{Q\left(s_t \mid o_t, a_t ;\ \phi\right)}\left[\ln Q\left(s_t \mid o_t, a_t ;\ \phi\right)\right]}_{\text {Negative Entropy }}\quad-\quad\underbrace{\mathbb{E}_{Q\left(s_t \mid o_t, a_t ;\ \phi\right)}\left[\ln p\left(o_t, s_t\right)\right]}_{\text {Energy}}}
     \end{align*}
 
-    \note<.->{
-        Free energy as energy minus entropy.
-        \begin{itemize}
-            \item First, it connects the concept of free energy as used in information theory with concepts used in statistical thermodynamics.
-            \item Second, it shows that the free energy can be evaluated by an agent because the energy is the surprise about the joint occurrence of sensations and their perceived causes, whereas the entropy is simply that of the agent’s own recognition density.
-            \item Third, it shows that free energy rests on a generative model of the world, which is expressed in terms of the probability of a sensation and its causes occurring together. This means that an agent must have an implicit generative model of how causes conspire to produce sensory data. It is this model that defines both the nature of the agent and the quality of the free-energy bound on surprise.
-        \end{itemize}
+    \note<6>{Perception is inference on the hidden states of the world causing sensory outcomes, and action is the result of inferring what policies (sequences of actions) must be adopted to obtain certain sensory outcomes.}
+
+    \note<7->{
+        Free energy as energy minus entropy. This formualtions\\~\\
+        
+        1. Connects the concept of free energy as used in information theory with concepts used in statistical thermodynamics.\\~\\
+        
+        2. Shows that the free energy can be evaluated by an agent because the energy is the surprise about the joint occurrence of sensations and their perceived causes, whereas the entropy is simply that of the agent’s own recognition density.\\~\\
+        
+        3. Third, it shows that free energy rests on a generative model of the world, which is expressed in terms of the probability of a sensation and its causes occurring together. This means that an agent must have an implicit generative model of how causes conspire to produce sensory data. 
+        % It is this model that defines both the nature of the agent and the quality of the free-energy bound on surprise.
     }
     
     % \begin{align*}
@@ -339,119 +407,219 @@
     % \begin{align*}
     %     \mu ^{*}&={\underset {\mu }{\operatorname {arg\,min} }}\{F(\mu ,a\,;\,s))\}\\a^{*}&={\underset {a}{\operatorname {arg\,min} }}\{F(\mu ^{*},a\,;\,s)\}
     % \end{align*}
-
 \end{frame}
-
+%------------------------------------------------
+\subsection{\cname{Predictive Coding and Active Inference}{friston2017active}}
+%------------------------------------------------
 \begin{frame}{Free-Energy Principle | Predictive Coding}
-    \blfootcitetext{friston2010free}
+    \blfootcitetext{friston2010free,friston2017active}
     \begin{align*}
-        \underbrace{\mathbb{F}(a_t)}_{\text{Variational Free Energy}} &
-        \onslide<+->{=\underbrace{-\ln p\left(o_t\right)}_{\text {Surprisal (Negative Evidence)}}+\underbrace{\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t, a_t; \phi\right) \| p\left(s_t \mid o_t\right)\right]}_{\text {Posterior Divergence }}}\\ &
-        \onslide<+->{\geq \underbrace{-\ln p\left(o_t\right)}_{\text {Surprisal (Negative Evidence)}}}\\
+        \underbrace{\mathbb{F}(a_t;\ \phi)}_{\text{Variational Free-Energy}} &
+        \onslide<+->{=\;\,\:-\underbrace{\ln p\left(o_t\right)}_{\text{Evidence}}\quad+\quad\underbrace{\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t, a_t ;\ \phi\right) \| p\left(s_t \mid o_t\right)\right]}_{\text{Posterior Divergence }}}\\ &
+        \onslide<+->{\geq\;\,\:\underbrace{-\ln p\left(o_t\right)}_
+        {\text{\makebox[\widthof{Evidence}][c]{Surprisal}}}}\\
         % 
-        \phantom{\underbrace{\mathbb{F}(a_t)}_{\text{Variational Free Energy}}} &
-        \phantom{=\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t ; \phi\right) \| p\left(o_t, s_t\right)\right]
-        =\mathbb{E}_{Q\left(s_t \mid o_t ; \phi\right)}\left[\ln \frac{Q\left(s_t \mid o_t ; \phi\right)}{p\left(o_t, s_t\right)}\right]}
+        \phantom{\underbrace{\mathbb{F}(a_t;\ \phi)}_{\text{Variational Free-Energy}}} &
+        \phantom{=\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t, a_t ;\ \phi\right) \| p\left(o_t, s_t\right)\right]=\mathbb{E}_{Q\left(s_t \mid o_t, a_t ;\ \phi\right)}\left[\ln \frac{Q\left(s_t \mid o_t, a_t ;\ \phi\right)}{p\left(o_t, s_t\right)}\right]}
+    \end{align*}\vspace{-40pt}
+    \begin{align*}
+        \onslide<.->{\mathbb{F} \approx -\ln p\left(o_t\right);\qquad Q\left(s_t \mid o_t, a_t ;\ \phi\right) \approx p\left(s_t \mid o_t\right)}
+    \end{align*}
+    \begin{align*}
+        \onslide<+->{\alert{\phi^*} & \alert{=\underset{\phi}{\arg \min }\{\mathbb{F}\}}}
     \end{align*}
 
-    \note<1>{Free energy as surprise plus a divergence term.\\~\\
+    \note<1>{Free energy as negative evidence plus a divergence term.\\~\\
     
-    The (perceptual) divergence is just the difference between the recognition density and the conditional density (or posterior density) of the causes of a sensation, given the sensory signals. This conditional density represents the best possible guess about the true causes. The difference between the two densities is always non-negative and free energy is therefore an upper bound on surprise. Thus, minimizing free energy by changing the recognition density (without changing sensory data) reduces the perceptual divergence, so that the recognition density becomes the conditional density and the free energy becomes surprise.}
+    The (perceptual) divergence is just the difference between the recognition density and the conditional density (or posterior density) of the causes of a sensation, given the sensory signals. This conditional density represents the best possible guess about the true causes.}
 
     \note<2>{Since the KL-divergence is always positive, the variational free-energy is an upper bound on the surprisal. (It is the negative Evidence Lower Bound (ELBO), in variational inference).}
 
-    \begin{align*}
-        \onslide<+>{\mathbb{F} \approx -\ln p\left(o_t\right)\\
-        Q\left(s_t \mid o_t ; \phi\right) \approx p\left(o_t, s_t\right)}
-    \end{align*}
+    \note<3>{As it is minimised, it becomes an increasingly accurate estimate of the surprisal. And at the same time, the beliefs of the agent converge to the true dynamics.
+    % Thus, minimizing free energy by changing the recognition density (without changing sensory data) reduces the perceptual divergence, so that the recognition density becomes the conditional density and the free energy becomes surprise.
+    }
 
-    \note<.>{As it is minimised, it becomes an increasingly accurate estimate of the surprisal. And at the same time, the beliefs of the agent converge to the true dynamics.}
+    \note<4>{The optimal model is then learned.}
+
+    \note<5>{Predictive coding is then inferring and adapting the optimal model parameters that minimise the free-energy.}
 \end{frame}
 
 \begin{frame}{Free-Energy Principle | Active Inference}
-    \blfootcitetext{friston2010free}
+    \blfootcitetext{friston2010free,friston2017active}
     \begin{align*}
-        \underbrace{\mathbb{F}(a_t)}_{\text{Variational Free Energy}} &
-        \onslide<+->{=\underbrace{-\mathbb{E}_{Q\left(s_t \mid o_t, a_t ; \phi\right)}\left[\ln p\left(o_t \mid s_t\right)\right]}_{\text {Accuracy }}+\underbrace{\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t ; \phi\right) \| p\left(s_t\right)\right]}_{\text {Complexity }}} \\
+        \underbrace{\mathbb{F}(a_t;\ \phi)}_{\text{Variational Free-Energy}} &
+        \onslide<+->{=\;-\underbrace{\mathbb{E}_{Q\left(s_t \mid o_t, a_t ;\ \phi\right)}\left[\ln p\left(o_t \mid s_t\right)\right]}_{\text {Accuracy }}\;+\;\underbrace{\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t, a_t ;\ \phi\right) \| p\left(s_t\right)\right]}_{\text {Complexity }}} \\
         % 
-        \underbrace{\mathcal{G}_\tau(\pi)}_{\text{Expected Free Energy}} & =\mathbb{E}_{Q\left(o_\tau, x_\tau \mid \pi\right)}\left[\ln Q\left(x_\tau \mid \pi\right)-\ln \tilde{p}\left(o_\tau, x_\tau\right)\right] \\
-        & \approx \mathbb{E}_{Q\left(\left(_\tau, x_\tau \mid \pi\right)\right.}\left[\ln Q\left(x_\tau \mid \pi\right)-\ln \tilde{p}\left(o_\tau\right)-\ln Q\left(x_\tau \mid o_\tau\right)\right] \\
-        & \approx \underbrace{-\mathbb{E}_{Q\left(o_\tau, x_\tau \mid \pi\right)}\left[\ln \tilde{p}\left(o_\tau\right)\right]}_{\text {Extrinsic Value }}-\underbrace{\mathbb{E}_{Q\left(o_\tau\right)} \mathbf{D}_{K L}\left[Q\left(x_\tau \mid o_\tau\right)|| Q\left(x_\tau \mid \pi\right)\right]}_{\text {Epistemic Value }}
-        % 
-        \phantom{\underbrace{\mathbb{F}(a_t)}_{\text{Variational Free Energy}}} &
-        \phantom{=\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t ; \phi\right) \| p\left(o_t, s_t\right)\right]
-        =\mathbb{E}_{Q\left(s_t \mid o_t ; \phi\right)}\left[\ln \frac{Q\left(s_t \mid o_t ; \phi\right)}{p\left(o_t, s_t\right)}\right]}
+        \phantom{\underbrace{\mathbb{F}(a_t;\ \phi)}_{\text{Variational Free-Energy}}} &
+        \phantom{=\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t, a_t ;\ \phi\right) \| p\left(o_t, s_t\right)\right]=\mathbb{E}_{Q\left(s_t \mid o_t, a_t ;\ \phi\right)}\left[\ln \frac{Q\left(s_t \mid o_t, a_t ;\ \phi\right)}{p\left(o_t, s_t\right)}\right]}
+    \end{align*}\vspace{-40pt}
+    \begin{align*}
+        \onslide<+->{\alert{a^*} & \alert{=\underset{a}{\arg \min }\left\{F\right\}}}
+        % ;\qquad\qquad
+        % \onslide<9>{p(\pi)=\sigma\left[-\gamma\,\cdot \mathcal{G}\left(\pi\right)\right]}
     \end{align*}
-
-    \note<.>{Free energy as complexity minus accuracy, using terms from the model comparison literature.\\~\\
+    %\vspace{12pt}
+    \begin{align*}
+        \onslide<+->{\underbrace{\mathcal{G}_\tau(\pi)}_{\text{Expected Free-Energy}}} \;&
+        \onslide<+->{=\;\mathbb{E}_{Q\left(o_\tau, s_\tau \mid \pi\right)}\left[\ln Q\left(s_\tau \mid \pi\right)-\ln \tilde{p}\left(o_\tau, s_\tau\right)\right]} \\ &
+        % & \approx \mathbb{E}_{Q\left(\left(o_\tau, s_\tau \mid \pi\right)\right.}\left[\ln Q\left(s_\tau \mid \pi\right)-\ln \tilde{p}\left(o_\tau\right)-\ln Q\left(s_\tau \mid o_\tau\right)\right] \\
+        \onslide<+->{\approx\;-\underbrace{\mathbb{E}_{Q\left(o_\tau, s_\tau \mid \pi\right)}\left[\ln \tilde{p}\left(o_\tau\right)\right]}_{\text {Extrinsic Value }}\;
+        % \onslide<+->{-\uncoverubrace<+->{\mathbb{E}_{Q\left(o_\tau\right)} \mathbf{D}_{K L}\left[Q\left(s_\tau \mid o_\tau\right)|| Q\left(s_\tau \mid \pi\right)\right]}{\uncoverubrace<+->{\text{\scriptsize Epistemic Value}}{\;=\mathbb{E}_{Q\left(o_\tau\right)}\left[\mathbf{H}\left[p\left(o_\tau \mid s_\tau\right)\right]\right]-\mathbf{H}\left[Q\left(o_\tau \mid \pi\right)\right]}}}}\\
+        % \onslide<+->{-\uncoverubrace<+->{\mathbb{E}_{Q\left(o_\tau\right)} \mathbf{D}_{K L}\left[Q\left(s_\tau \mid o_\tau\right)|| Q\left(s_\tau \mid \pi\right)\right]}{\footnotesize\;\uncoverubrace<+->{=\mathbb{E}_{Q\left(o_\tau\right)}\left[\mathbf{H}\left[p\left(o_\tau \mid s_\tau\right)\right]\right]-\mathbf{H}\left[Q\left(o_\tau \mid \pi\right)\right]}{\text{\scriptsize Epistemic Value }}}}}\\
+        \onslide<+->{-\uncoverubrace<+->{\mathbb{E}_{Q\left(o_\tau\right)} \mathbf{D}_{K L}\left[Q\left(s_\tau \mid o_\tau\right)|| Q\left(s_\tau \mid \pi\right)\right]}{\footnotesize\;\underbrace{={\color<+->{orange}{\mathbf{H}\left[Q\left(o_\tau \mid \pi\right)\right]}}-\mathbb{E}_{Q\left(o_\tau\right)}\left[\mathbf{H}\left[p\left(o_\tau \mid s_\tau\right)\right]\right]}_{\text{\scriptsize Epistemic Value}}}}}\\
+        % \onslide<+->{=\;-\mathbb{E}_{Q\left(o_\tau, s_\tau \mid \pi\right)}\left[\ln \tilde{p}\left(o_\tau\right)\right]\;+\;\mathbb{E}_{Q\left(o_\tau\right)}\left[\mathbf{H}\left[p\left(o_\tau \mid s_\tau\right)\right]\right]-\mathbf{H}\left[Q\left(o_\tau \mid \pi\right)\right]}\\
+        % 
+        \phantom{\underbrace{\mathbb{F}(a_t;\ \phi)}_{\text{Variational Free-Energy}}} &
+        \phantom{=\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t, a_t ;\ \phi\right) \| p\left(o_t, s_t\right)\right]=\mathbb{E}_{Q\left(s_t \mid o_t, a_t ;\ \phi\right)}\left[\ln \frac{Q\left(s_t \mid o_t, a_t ;\ \phi\right)}{p\left(o_t, s_t\right)}\right]}
+    \end{align*}\vspace{-40pt}
+    % \tilde{p}\left(o_\tau, s_\tau\right) \approx \tilde{p}\left(o_\tau\right) Q\left(s_\tau \mid o_\tau\right)
     
-    Complexity is the difference between the recognition density and the prior density on causes; it is also known as Bayesian surprise15 and is the difference between the prior density — which encodes beliefs about the state of the world before sensory data are assimilated — and posterior beliefs, which are encoded by the recognition density. Accuracy is simply the surprise about sensations that are expected under the recognition density. This formulation shows that minimizing free energy by changing sensory data (without changing the recognition density) must increase the accuracy of an agent’s predictions. In short, the agent will selectively sample the sensory inputs that it expects. This is known as active inference.}
+    \note<1>{Free energy as complexity minus accuracy, using terms from the model comparison literature.\\~\\
+    
+    Complexity is the difference between the recognition density and the prior density on causes; it is also known as Bayesian surprise and is the difference between the prior density — which encodes beliefs about the state of the world before sensory data are assimilated — and posterior beliefs, which are encoded by the recognition density. Accuracy is simply the surprise about sensations that are expected under the recognition density.\\~\\
+    
+    This formulation shows that minimizing free energy by changing sensory data (without changing the recognition density) must increase the accuracy of an agent’s predictions. In short, the agent will selectively sample the sensory inputs that it expects. This is known as active inference.}
+
+    \note<2>{Optimal action is then the one that minimises the free-energy.}
+
+    \note<8>{The second term can be decomposed into two terms, the first of which is a representation of the entropy of the beliefs of the outputs under a policy.}
+\end{frame}
+
+\begin{frame}{Free-Energy Principle | Active Inference | Inferring Policies}
+    \begin{itemize}
+        \item<+-> Probability ('power' of a policy) proportional to the free-energy it minimises \footcite{friston2010free,friston2017active},
+        \vspace{12pt}\begin{align*}\hspace{0.4\linewidth} & \hspace{0.6\linewidth} \nonumber \\[-\baselineskip]
+            \onslide<+->{p(\pi)\;&=\;\sigma\left[-\gamma\,\cdot \mathcal{G}\left(\pi\right)\right]}
+        \end{align*}\vspace{20pt}
+        \note<.>{Where $\sigma$ is the Softmax function.\\~\\
+        This formulation is mathematically derived.}
+        
+        \item<+-> Incorporating propensity for habit formation explicitly in this formulation\footcite{ocd},
+        \vspace{12pt}\begin{align*}\hspace{0.4\linewidth} & \hspace{0.6\linewidth} \nonumber \\[-\baselineskip]
+            \onslide<.->{p(\pi)\;&=\;\sigma\left[\ln{E}\left(\pi\right)-\gamma\,\cdot \mathcal{G}\left(\pi\right)\right]}
+        \end{align*}
+        \note<.>{This is the formulation used by \citet{ocd} to model habitual behavior.}
+    \end{itemize}
 \end{frame}
 %_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 % \subsubsection{Predictive Coding and Active Inference}
 % \begin{frame}{Predictive Coding and Active Inference}
-%     \blfootcitetext{friston2010free}
-    
+%     \blfootcitetext{friston2010free,friston2017active}
 % \end{frame}
 %_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 }
 %------------------------------------------------
 
 \begin{frame}{A Computational Model of OCD | Theory}
-    \blfootcitetext{fradkin2018rigidly}
+    \blfootcitetext{ocd}
     \begin{itemize}
-        \item<+-> Faulty state-transition function, $P(s'|s, a)$
+        \item \textbf{\textit{Beliefs} of excessive uncertainty regarding state transitions} as the underlying cause
+        \begin{itemize}\setlength\itemsep{6pt} \vspace{6pt}
+            % \item<+-> State-transition function, $P(s_\tau|s_t, a_t)$
+            \item[$\rightarrow$] If so, this entropy, $\color{orange}\mathbf{H}\left[Q\left(o_\tau \mid \pi\right)\right]$ will be high (agnostic of the policy)
+            \note<.>{The beliefs over the outputs will be imprecise.}
+            
+            \item[$\rightarrow$] The free-energy, $\mathcal{G}$ will be invariantly low
+
+            \item[$\rightarrow$] Impaired exploration | \textit{preservation}
+            % \item<+->[$\rightarrow$] \textbf{Indecisiveness}
+            
+            \item[$\rightarrow$] Increased reliance on habitual policies | \textit{inflexibility}
+            \note<.>{Once established, habitual policies are increasingly independent of outcomes and beliefs. And engaging in them only strengthens them!}
+            \item[$\rightarrow$] Inability to rely on goal-directed behavior\footcite{gillan2014goal}
+        \end{itemize}
     \end{itemize}
+    \note<.>{The study studied this hypothesis in a simulated environment to look for emergence of checking behavior under beliefs of high transition uncertainty.\\~\\
+    They also study the possible mechanism of excessive harm-avoidance as the underlying cause of OCD, by changing priors of certain policies and found it NOT to be the unique determinant of checking behavior.}
 \end{frame}
 
-\begin{frame}[c]{What are the characteristics we can focus on?}
-    \trickbeamer
-    \begin{itemize}
-        \item \textbf{Indicisiveness} and excessive pathological doubt
+\begin{frame}[c]{A Computational Model of OCD | Compulsions}
+    \blfootcitetext{ocd}
+    % \trickbeamer
+    \begin{itemize} \setlength\itemsep{6pt}
+        \item<1-> \textbf{Over-responsiveness to sensory stimulus}, thoughts, and feedback
         \begin{itemize}
-            \item<+-> Difficulty in relying on past actions to predict consequences of own actions
-        \end{itemize}
-        % \note[item]<.->{Difficulty in relying on past actions to predict consequences of own actions}
-        
-        \item \textbf{Repeated checking} and excessive information gathering (\textit{over-exploration} or \textit{over-complicated exploration})
-        \begin{itemize}
-            \item<+-> Uncertainty regarding current state
-        \end{itemize}
-        % \note[item]<.->{Uncertainty regarding current state}
-        
-        \item \textbf{Over-responsiveness to sensory stimulus}, thoughts, and feedback
-        \begin{itemize}
-            \item<+-> Over-reliance on sensory information
+            \item<2->[\checkmark] Over-reliance on sensory information
+            % \item<3->[\checkmark] Mechanism of intrusive thoughts? 
+            \note[item]<2->{Increase in weighting of immediate feedback, which can potentially explain different types of obsessions, including intrusive thoughts and patients' sensory overresponsiveness.\\~\\}
+            % \note[item]<3->{This over-weighing of sensory information could explain intrusive thoughts?\\~\\}
         \end{itemize}
         % \note[item]<.->{Over-relaince on sensory information}
 
-        \item \textbf{Over-reliance on habits} at the \textit{expense of goal-directed behavior}
+        \item<4-> \textbf{Repeated checking} and excessive information gathering (\textit{impaired exploration})
         \begin{itemize}
-            % \item<4-> Model-free control?
-            \item<+-> Over-estimation of the diversity of the possible chain of events
+            \item<5->[\checkmark] Uncertainty regarding current state
+            \note[item]<5->{This leads to an impaired ability to rely on action planning and execution as sources of information regarding the successful completion of actions, in-turn exasperating recurring compulsive behavior.\\~\\}
         \end{itemize}
-        % \note[item]<.->{Overestimating the diversity of the possible chain of events}
+        % \note[item]<.->{Uncertainty regarding current state}
+
+        \item<6-> \textbf{Indicisiveness} and excessive pathological doubt
+        \begin{itemize}
+            \item<7->[\checkmark] Difficulty in predicting consequences of own actions
+            \note[item]<7->{Emergence of compulsive behavior to correct for current PE, uncertainty in former, and the prediction of future PE.\\~\\}
+        \end{itemize}
+        % \note[item]<.->{Difficulty in relying on past actions to predict consequences of own actions}
+        
+        \item<8-> \textbf{Over-reliance on compensatory habits} at the \textit{expense of goal-directed behavior}
+        \begin{itemize}
+            % \item<5-> Model-free control?
+            \item<9->[\checkmark] Over-estimation of the diversity of the possible chain of events
+            \note[item]<9->{Once established, habitual policies are increasingly independent of outcomes and beliefs. And engaging in them only strengthens them.}
+        \end{itemize}
     \end{itemize}
 \end{frame}
 
-\begin{frame}{A Computational Model of OCD | Conclusions}
-    \blfootcitetext{fradkin2018rigidly}
-    % Simulations based on the theory was able to explain,
-    \trickbeamer
+\begin{frame}[c]{A Computational Model of OCD | Obsessions?}
+    \blfootcitetext{ocd}
+    What about obsessions (intrusive thoughts)? What could be their origin?
     \begin{itemize}
-        \item<+-> Persistent experiences that actions were not adequately performed
-        \note[item]<.>{Impaired ability to rely on action planning and execution as sources of information regarding the successful completion of actions, creating a recurring experience that (compulsive) actions were not done 'right'}
-
-        \item<+-> Emergence of compulsions and predominance of habits over goal-directed behavior
-        \note[item]<.>{Evolution of excessive checking and foraging behaviors, and, under some conditions – overreliance on habits}
-
-        \item<+-> Increase in weighting of immediate feedback
-        \note[item]<.>{which can potentially explain different types of obsessions, including intrusive thoughts and patients' sensory overresponsiveness}
+        \item Over-weighing of sensory information?
+        \item Consequence of belief that actions were not adequately performed?
+        \item Rules / Rituals?
+        \begin{itemize}
+            \item Consequences of over-reliance of habits (or strong priors over policies)?
+        \end{itemize}
+        \item Magical thoughts / Illusion of control?
+        \begin{itemize}
+            \item Abnormal ability to predict action consequences $+$ over-sesitivity to new information?
+            \begin{itemize}
+                \item[$\rightarrow$] Post hoc ergo propter hoc?
+            \end{itemize}
+        \end{itemize}
+        \item Delusions? (in relation to Schizophrenia)
+        \begin{itemize}
+            \item Decreasing confidence in sensory input ($p(o_t|s_t)$) $+$ increasing priors of habits\footcite{adams2022everything}
+        \end{itemize}
     \end{itemize}
-    \begin{figure}
-        \includegraphics<+->[width=0.4\linewidth]{Images/conclusions_OCD.png}
-    \end{figure}
+    \note<.>{
+        Decreasing confidence in sensory input ($p(o_t|s_t)$) and increasing confidence (precision) in habits led to some classic psychological effects, choice-induced preference change, and an optimism bias in inferences about oneself.\\~\\
+
+        Could not find evidence of simple deficit in reversal learning.\\~\\
+        
+        Change in a single parameter is not sufficient for delusions; rather, delusions arise due to simultaneous conditional dependencies that create ‘basins of attraction’ which trap Bayesian beliefs.\\~\\
+
+        Study also considered the role of 'mood' (prior over sensory outcomes).
+    }
 \end{frame}
+
+% \begin{frame}<0>[noframenumbering]{A Computational Model of OCD | Conclusions}
+%     \blfootcitetext{ocd}
+%     % Simulations based on the theory was able to explain,
+%     \trickbeamer
+%     \begin{itemize}
+%         \item<+-> Persistent experiences that actions were not adequately performed
+%         \note[item]<.>{Impaired ability to rely on action planning and execution as sources of information regarding the successful completion of actions, creating a recurring experience that (compulsive) actions were not done 'right'}
+
+%         \item<+-> Emergence of compulsions and predominance of habits over goal-directed behavior
+%         \note[item]<.>{Evolution of excessive checking and foraging behaviors, and, under some conditions – overreliance on habits}
+
+%         \item<+-> Increase in weighting of immediate feedback
+%         \note[item]<.>{which can potentially explain different types of obsessions, including intrusive thoughts and patients' sensory overresponsiveness}
+%     \end{itemize}
+%     \begin{figure}
+%         \includegraphics<+->[width=0.4\linewidth]{Images/conclusions_OCD.png}
+%     \end{figure}
+% \end{frame}
 %************************************************
 
 %************************************************
@@ -486,11 +654,103 @@
 %************************************************
 \section{Modeling Obsessive-Compulsive Behavior in Self-Exploring RL Agents} % Inspiration from mentioned studies
 %------------------------------------------------
+% \begin{frame}{Modeling Obsessive-Compulsive Behavior in Self-Exploring RL Agents}
+%     \begin{itemize}
+%         \item[] 
+%     \end{itemize}
+% \end{frame}
+%------------------------------------------------
 \begin{frame}{Modeling Obsessive-Compulsive Behavior in Self-Exploring RL Agents}
+    % \trickbeamer
     \begin{itemize}
-        \item[] 
+        \item Relevant factors that can be adjusted to model OCD
+        \begin{itemize}
+            \item State transition uncertainty
+            \item Prior over habits
+            \item Likelihood / sensory uncertainty
+            \item Prior preferences / mood
+        \end{itemize}
+
+        \item Faulty prior relational inductive biases in structured world models
+        \begin{itemize}
+            \item<+-> Spurious connections
+        \end{itemize}
+
+        % \item Active inference based navigation and planning \footcite{kaplan2018planning} $\longleftrightarrow$ Options framework (RL)?
+
+        \item Important to study the role of obsessions in conjuction with compulsions
+        \begin{itemize}
+            \item Causal relationship between obsessions and compulsions is disputed
+            \begin{itemize}
+                \item Obsessions $\longrightarrow$ Compulsions (OCD)
+                \note[item]<.>{Historically, compulsions are thought of as reactions to quell the anxiety caused by obsessions.}
+
+                \item Compulsions $\longrightarrow$ Obsessions (COD) \footcite{gillan2014goal}
+                \note[item]<.>{But there is evidence from experimental studies that propose that obsessions might just be post-hoc rationalisations of compulsive behavior. \citep{gillan2014goal}}
+            \end{itemize}
+        \end{itemize}
     \end{itemize}
 \end{frame}
+%------------------------------------------------
+
+%------------------------------------------------
+\begin{frame}[c]{Surmise}
+    \trickbeamer
+    \begin{itemize}\setlength\itemsep{6pt} \vspace{6pt}
+        % Psychologically
+        \item{Intrusive thoughts\footcite{salkovskis1995relationship,abramowitz2014obsessive}\\
+        \hspace{20pt}\onslide<+->{$\longrightarrow$ harm-avoidance urge\textsuperscript{1}}
+        
+        \hspace{30pt}
+        \onslide<+->{$+$ inflated priors of certain policies \footcite{ocd}}
+        \tikz[remember picture] \node[coordinate] (n1) {};
+
+        \hspace{30pt}
+        \onslide<+->{$+$ faulty/unfounded world models (\textit{delusions}) \footcite{adams2022everything}}
+        \tikz[remember picture] \node[coordinate] (n2) {};
+
+        % \onslide<+->{$+$ faulty world models in terms of causal relationships\footcite{abramowitz2014obsessive}}
+        % \onslide<+->{$+$ inflated priors of interconnection (\textit{delusions})\footcite{adams2022everything}}\\
+
+        \hspace{60pt}
+        \onslide<+->{$\longrightarrow$ misguided goal-directed planning ('hesitant actions') \textsuperscript{2,3,}\footcite{fradkin2020doubting}}
+
+        \hspace{80pt}
+        \onslide<+->{$\longrightarrow$ no-immediate feedback}
+        \onslide<+->{$\longrightarrow$ not-just-right-experiences\textsuperscript{2,3,4}}
+
+        \hspace{120pt}
+        \onslide<+->{$\longrightarrow$ repetitive actions (\textit{compulsions})\textsuperscript{2}}
+        \tikz[remember picture] \node[coordinate] (t1) {};
+
+        \hspace{160pt}
+        \onslide<+->{$\longrightarrow$ intrusive thoughts (\textit{obsessions})\textsuperscript{1}}
+
+        \hspace{200pt} %\makebox[\widthof{Intrusive thoughts}][c]{}
+        \onslide<+->{$\longrightarrow$ \dots}
+        }
+
+        \begin{tikzpicture}[remember picture,overlay]   %% use here too
+            \path[draw=magenta,thick,->]<+-> ([yshift=5pt]t1.east) to [out=0,in=0,distance=2.1in] ([yshift=5pt]n1.east);
+            \path[draw=magenta,thick,->]<+-> ([yshift=5pt]t1.east) to [out=0,in=0,distance=2.0in] ([yshift=5pt]n2.east);
+        \end{tikzpicture}
+
+        \note<1>{Anxiety disorder.}
+        \note<4>{Magical thoughts | causal correlations in coincidental events even without evidence.}
+        \note<5>{Due to high entropy of the policy distribution, uncertainty in state transition or sensory likelihood.}
+        \note<9->{A vicious cycle.}
+        
+        \note<0>{The studies we discussed usually find a model of compulsions, and make conjectures about the imergence or causality of obsessions. While this could be argued to complete at that lower-level in an embodied sense, it does not paint a complete picture of the disorder and fails to do justice to the relationship between obsessions and compulsions. Typically people with OCD have a clear picture of the inter-relationship between their obsessions and compulsions.\\~\\
+        
+        Putting together the literature I've read I surmise a potential mechanism of OCD.\\~\\
+        }
+
+        \note[item]<11->{The resulting obsessions from high priors in turn reinforce habit priors.}
+        \note[item]<12->{The desire to get feedback for actions leads to forming correlations, a expectation, or an inflated prior for interconnections, which can be related to a behavioral propensity for sprious pattern identification in individuals with OCD.}
+    \end{itemize}
+\end{frame}
+%------------------------------------------------
+
 %------------------------------------------------
 \subsection{Computational Models of Related Mental Disorders}
 %------------------------------------------------
@@ -510,16 +770,24 @@
 %_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 }
 %------------------------------------------------
-\begin{frame}{Modeling Obsessive-Compulsive Behavior in Self-Exploring RL Agents}
-\end{frame}
 %************************************************
 
 %************************************************
 \section*{}
 \begin{frame}{Summary}
+    \onslide<.->
     \begin{itemize}
-        \item Active inference based navigation and planning \footcite{kaplan2018planning} $\longleftrightarrow$ Options framework (RL)?
+        \item What is OCD?
+        \item Computational models of OCD \footcite{ocd}
+        \item Free energy principle and active inference \footcite{friston2017active}
+        \item Self-supervised learning motivated by active inference \footcite{houthooft2016vime,achiam2017surprise,tschantz2020reinforcement}
+        \item Modeling related mental health disorders
+        \begin{itemize}
+            \item PB unit for modeling higher level cognitive function in a CTRNN
+        \end{itemize}
+        \item Ideas for modeling OCD in RL
     \end{itemize}
+    % \tableofcontents
 \end{frame}
 %************************************************
 
