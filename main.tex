@@ -327,12 +327,16 @@
 
 \begin{frame}{A Computational Model of OCD}
     \blfootcitetext{ocd,fradkin2020doubting}
-    \note<1>{We will focus a mode by \citet{ocd} which does have such a framework.}
+    \note<1>{We will focus a model by \citet{ocd} which does have such a framework.}
     
     \begin{itemize}
         \item<2-> \textbf{\textit{Beliefs} of excessive uncertainty regarding state transitions} as the underlying cause
     \end{itemize}
-    \note<2>{The model is based on the hypothesis that beliefs of excessive uncertainty regarding state transitions is the root underlying cause of the disorder.}
+    \note<2>{Under the Bayesian-brain framework, in which the brain is considered to be a optimal inference machine in the Bayesian sense, this model is based on the hypothesis that beliefs of excessive uncertainty regarding state transitions is the root underlying cause of the disorder.}
+
+    \note<3>{Due to this uncertainty, the brain cannot rely on past experience to realize its current state, or predict future states, or plan for a goal directed behavior, and thus has to resort to over-reliance on sensor information.\\~\\
+
+    This is one aspect of it.\\~\\}
     
     \begin{columns}[t] % [c] or [t]
         \column{.45\textwidth} % Left column and width
@@ -346,7 +350,7 @@
             \end{figure}
     \end{columns}
 
-    \note<3>{The paper studies this hypothesis under a Markov Decision Process paradigm, the mechanics of which is based on the free-energy principle.}
+    \note<3>{The paper further studies this hypothesis under a Markov Decision Process paradigm, the mechanics of which is based on the free-energy principle.}
 \end{frame}
 %------------------------------------------------
 \subsection{\cname{Free-Energy Principle}{friston2010free}}
@@ -409,7 +413,7 @@
     % \end{align*}
 \end{frame}
 %------------------------------------------------
-\subsection{\cname{Predictive Coding and Active Inference}{friston2017active}}
+\subsubsection{\cname{Predictive Coding and Active Inference}{friston2017active}}
 %------------------------------------------------
 \begin{frame}{Free-Energy Principle | Predictive Coding}
     \blfootcitetext{friston2010free,friston2017active}
@@ -581,10 +585,7 @@
         \end{itemize}
         \item Magical thoughts / Illusion of control?
         \begin{itemize}
-            \item Abnormal ability to predict action consequences $+$ over-sesitivity to new information?
-            \begin{itemize}
-                \item[$\rightarrow$] Post hoc ergo propter hoc?
-            \end{itemize}
+            \item Impaired ability to predict action consequences $+$ over-sensitivity to new information? \onslide<+->{$\rightarrow$ Post hoc ergo propter hoc?}
         \end{itemize}
         \item Delusions? (in relation to Schizophrenia)
         \begin{itemize}
@@ -623,25 +624,114 @@
 %************************************************
 
 %************************************************
-\section{Active Learning and Self-Supervised Reinforcement Learning}
+%------------------------------------------------
+\section{Computational Models of Related Mental Disorders}
+%------------------------------------------------
+{\setbeamercolor{background canvas}{bg=peach}
+%_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+\subsection{\cname{Schizophrenia}{schizophrenia}}
+\begin{frame}{Schizophrenia}
+    \blfootcitetext{schizophrenia}
+    \trickbeamer
+    \begin{itemize}
+        \item<+-> Multi-Timescale Continuous-Time RNN (MT-CTRNN)
+        \item<.-> Slow neurons for high-level and fast neurons for low-level cognition
+        \item<.-> Slow 'Parametric Bias' (PB) neurons as high-level \textit{intent} units
+        \note<.->{These units act as bifurcation parameters for the low-level network.\\~\\
+        
+        The network generates predictions of the sensory (visuo-proprioceptive) states (which is futrther used to generate joint-angles/action) from current sensory input and uses the prediction error as training. This is consistent with the theory of active inference and predictive coding. 
+        }
+
+        \begin{figure}
+            \includegraphics<.->[width=0.3\linewidth]{Images/schizophrenia.png}
+        \end{figure}
+
+        \item<+-> Modified network connectivity between slow and fast units at random after training
+        \item<.-> Spontaneous generation of prediction error signals in PB units
+        
+    \end{itemize}
+\end{frame}
+%_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+\subsection{\cname{Autism Spectrum Disorder (ASD)}{asd}}
+\begin{frame}{Autism Spectrum Disorder (ASD)}
+    \blfootcitetext{asd}
+    % \trickbeamer
+    \begin{itemize}
+        \item<2-> Stochastic (S-)MT-CT-RNN-PB | mean \textit{and variance} of sensory prediction
+        \begin{columns}[t] % [c] or [t]
+            \column{.3\textwidth} % Left column and width
+                \begin{figure}
+                    \includegraphics<2->[width=0.6\linewidth]{Images/asd.png}
+                \end{figure}
+            
+            \column{.6\textwidth} % Right column and width
+                \begin{figure}
+                    \includegraphics<2->[width=0.7\linewidth]{Images/asd2.png}
+                \end{figure}
+        \end{columns}
+        \item Modified sensory precision (inverse variance) after training
+        \item Increased precision led to excessive response to error signals $\rightarrow$ incorrect intention % ($+$ subsequent fixation)
+        \item Decreased precision led to disregarding error signals $\rightarrow$ invariability of intention
+    \end{itemize}
+\end{frame}
+%_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+}
+%------------------------------------------------
+%************************************************
+
+%************************************************
+\section{Free-Energy Principle and Self-Supervised Reinforcement Learning}
 %------------------------------------------------
 \subsection{\cname{Variational Information Maximizing Exploration (VIME)}{houthooft2016vime}}
 \begin{frame}{Variational Information Maximizing Exploration (VIME)}
     \blfootcitetext{houthooft2016vime}
+    \trickbeamer
+    \begin{align*}
+        \onslide<+->{\underbrace{\Sigma_{t}\left(H\left(\Theta \mid \xi_{t},\,a_{t}\right)\,-\,H\left(\Theta \mid s_{t+1},\,\xi_{t},\,a_{t}\right)\right)}_{\text{Maximum Information Gain}}}
+        \onslide<+->{&= I\left(s_{t+1};\Theta \mid \xi_{t},a_{t}\right)}\\
+        \onslide<+->{&= \mathbb{E}_{s_{t+1}\sim p\left(\cdot|\xi_{t},a_{t}\right)}\left[D_{\mathrm{KL}}\left[\alert<+->{p\left(\theta|\xi_{t},a_{t},s_{t+1}\right)} \| p\left(\theta|\xi_{t}\right)\right]\right]}
+        % 
+    \end{align*}
     
+    % \begin{align*}
+    %     \onslide<+->{r^{\prime}\left(s_{t},a_{t},s_{t+1}\right)=r\left(s_{t},a_{t}\right)+\eta D_{\mathrm{KL}}\left[p\left(\theta|\xi_{t},a_{t},s_{t+1}\right)\| p\left(\theta|\xi_{t}\right)\right]}
+    % \end{align*}
+
+    \begin{align*}
+        \onslide<+->{r^{\prime}\left(s_{t},a_{t},s_{t+1}\right)=r\left(s_{t},a_{t}\right)+\eta \mathbf{D}_{\mathrm{KL}}\left[Q\left(\theta;\phi_{t+1}\right)\|Q\left(\theta;\phi_{t}\right)\right]}
+    \end{align*}
+
+    \begin{align*}
+        \onslide<+->{-L\left[Q\left(\theta;\phi\right), \xi\right]\;&= \;-\mathbb{E}_{\theta\sim Q\left(\cdot;\phi\right)}\left[\log p\left(\xi \mid \theta\right)\right]&&+\;\mathbf{D}_{\mathrm{KL}}\left[Q\left(\theta;\phi\right)\| p\left(\theta\right)\right]\qquad}\\
+        % 
+        % \mathcal{G}_\tau(\pi) \;&\approx \mathbb{E}_{Q\left(o_\tau, s_\tau \mid \pi\right)}\left[\ln \tilde{p}\left(o_\tau\right)\right] - 
+        % \mathbb{E}_{Q\left(o_\tau\right)} \mathbf{D}_{K L}\left[Q\left(s_\tau \mid o_\tau\right)|| Q\left(s_\tau \mid \pi\right)\right]
+        \onslide<+->{\mathbb{F}\;&=\;-\mathbb{E}_{Q\left(s_t \mid o_t, a_t ;\ \phi\right)}\left[\ln p\left(o_t \mid s_t\right)\right]&&+\;\mathbf{D}_{K L}\left[Q\left(s_t \mid o_t, a_t ;\ \phi\right) \| p\left(s_t\right)\right]}
+        %
+    \end{align*}
 \end{frame}
 %------------------------------------------------
 \subsection{\cname{Surprise-based Intrinsic Motivation}{achiam2017surprise}}
 \begin{frame}{Surprise-based Intrinsic Motivation}
     \blfootcitetext{achiam2017surprise}
-    
+    \trickbeamer
+    \begin{align*}
+        \underset{\phi}{\mathrm{min}} - \frac{1}{\left|D\right|}\sum_{\left(s_t,a_t,s_{t+1}\right)\in D}\log P_{\phi}\left(s_{t+1} \mid s_t, a_t\right) \text{Dynamics Model Update}
+    \end{align*}
+    \begin{align*}
+        \underset{\pi}{\mathrm{max}}\ L(\pi) + \eta\cdot{}E_{s,a\sim\pi}\left[\mathbf{D}_{KL}\left(P\|P_{\phi}\right)\left[s,a\right]\right]  \text{Policy Update}
+    \end{align*}
+    \begin{align*}
+        r^{\prime}\left(s,a,s^{\prime}\right)=r\left(s,a,s^{\prime}\right)-\eta\cdot \log P_{\phi}\left(s^{\prime} \mid s,a\right)
+    \end{align*}
+    \note{There're also methods directly motivated by free-energy minimisation in Active Inference for RL, one in particular from \citet{tschantz2020reinforcement}.}
 \end{frame}
 %------------------------------------------------
-\subsection{\cname{Reinforcement Learning Through Active Inference}{tschantz2020reinforcement}}
-\begin{frame}{Reinforcement Learning Through Active Inference}
-    \blfootcitetext{tschantz2020reinforcement}
+% \subsection{\cname{Reinforcement Learning Through Active Inference}{tschantz2020reinforcement}}
+% \begin{frame}{Reinforcement Learning Through Active Inference}
+%     \blfootcitetext{tschantz2020reinforcement}
     
-\end{frame}
+% \end{frame}
 %------------------------------------------------
 % \hyperlink{RLvsAIf}{\beamerbutton{Reinforcement Learning or Active Inference?}}
 % \subsection*{Reinforcement Learning or Active Inference?}{friston2009reinforcement}
@@ -694,7 +784,7 @@
 %------------------------------------------------
 
 %------------------------------------------------
-\begin{frame}[c]{Surmise}
+\begin{frame}[c]{Proposal}
     \trickbeamer
     \begin{itemize}\setlength\itemsep{6pt} \vspace{6pt}
         % Psychologically
@@ -731,44 +821,24 @@
         }
 
         \begin{tikzpicture}[remember picture,overlay]   %% use here too
-            \path[draw=magenta,thick,->]<+-> ([yshift=5pt]t1.east) to [out=0,in=0,distance=2.1in] ([yshift=5pt]n1.east);
+            \path[draw=magenta,thick,->]<+-> ([yshift=5pt]t1.east) to [out=0,in=0,distance=2.1in] ([yshift=5pt]n1.east);    
             \path[draw=magenta,thick,->]<+-> ([yshift=5pt]t1.east) to [out=0,in=0,distance=2.0in] ([yshift=5pt]n2.east);
         \end{tikzpicture}
 
         \note<1>{Anxiety disorder.}
         \note<4>{Magical thoughts | causal correlations in coincidental events even without evidence.}
         \note<5>{Due to high entropy of the policy distribution, uncertainty in state transition or sensory likelihood.}
-        \note<9->{A vicious cycle.}
+        \note<9>{A vicious cycle.}
         
         \note<0>{The studies we discussed usually find a model of compulsions, and make conjectures about the imergence or causality of obsessions. While this could be argued to complete at that lower-level in an embodied sense, it does not paint a complete picture of the disorder and fails to do justice to the relationship between obsessions and compulsions. Typically people with OCD have a clear picture of the inter-relationship between their obsessions and compulsions.\\~\\
         
-        Putting together the literature I've read I surmise a potential mechanism of OCD.\\~\\
-        }
+        Putting together the literature I've read I put together a potential mechanism of OCD.}
 
-        \note[item]<11->{The resulting obsessions from high priors in turn reinforce habit priors.}
-        \note[item]<12->{The desire to get feedback for actions leads to forming correlations, a expectation, or an inflated prior for interconnections, which can be related to a behavioral propensity for sprious pattern identification in individuals with OCD.}
+        \note<11>{The resulting obsessions from high priors in turn reinforce habit priors.}
+        
+        \note<12>{The desire to get feedback for actions leads to forming correlations, a expectation, or an inflated prior for interconnections, which can be related to a behavioral propensity for sprious pattern identification in individuals with OCD.}
     \end{itemize}
 \end{frame}
-%------------------------------------------------
-
-%------------------------------------------------
-\subsection{Computational Models of Related Mental Disorders}
-%------------------------------------------------
-{\setbeamercolor{background canvas}{bg=peach}
-%_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
-\subsubsection{\cname{Schizophrenia}{schizophrenia}}
-\begin{frame}{Schizophrenia}
-    \blfootcitetext{schizophrenia}
-    
-\end{frame}
-%_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
-\subsubsection{\cname{Autism Spectrum Disorder (ASD)}{asd}}
-\begin{frame}{Autism Spectrum Disorder (ASD)}
-    \blfootcitetext{asd}
-    
-\end{frame}
-%_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
-}
 %------------------------------------------------
 %************************************************
 
@@ -780,7 +850,7 @@
         \item What is OCD?
         \item Computational models of OCD \footcite{ocd}
         \item Free energy principle and active inference \footcite{friston2017active}
-        \item Self-supervised learning motivated by active inference \footcite{houthooft2016vime,achiam2017surprise,tschantz2020reinforcement}
+        \item Self-supervised learning methods related to the free-energy framework \footcite{houthooft2016vime,achiam2017surprise,tschantz2020reinforcement}
         \item Modeling related mental health disorders
         \begin{itemize}
             \item PB unit for modeling higher level cognitive function in a CTRNN
